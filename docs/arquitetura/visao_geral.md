@@ -1,0 +1,1 @@
+![Grafico de Gantt](./img/grafico_gantt.png)
