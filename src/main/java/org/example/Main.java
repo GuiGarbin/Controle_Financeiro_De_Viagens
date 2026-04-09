@@ -14,7 +14,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Prototype.fxml"));
         VBox root = loader.load();
 
-        Scene scene = new Scene(root, 300, 200);
+        Scene scene = new Scene(root, 720, 420);
 
         stage.setTitle("Janela Protótipo");
         stage.setScene(scene);
