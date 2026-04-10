@@ -1,4 +1,4 @@
-# GoLedger
+# Controle de Viagens
  Descrição do sistema: sistema focado no controle de gastos durante uma viagem, realizando: criação de viagem, 
  registro de custo de pontos turísticos, registro de gastos,
  conversão de moeda, calculo de limite de gastos diário e total.
