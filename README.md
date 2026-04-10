@@ -18,6 +18,8 @@
  Operações de registro, cálculo e conversão offline
 
  # Instalação
- 1) Certifique-se que você tem o [Java 21](https://jdk.java.net/java-se-ri/21) e o [Maven] (https://maven.apache.org/download.cgi) instalados
- 2) <p>Clone o repositório com<br><code>Git clone https://github.com/GuiGarbin/Controle_Financeiro_De_Viagens</code></p>
- 3) Navegue até a pasta em que o repositório foi clonado e use o comando <code>mvn javafx:run</code>
+ 1) Certifique-se que você tem o [Java 21](https://jdk.java.net/java-se-ri/21) e o [Maven](https://maven.apache.org/download.cgi) instalados
+ 2) <p>**Clone o repositório com**<br><code>Git clone https://github.com/GuiGarbin/Controle_Financeiro_De_Viagens</code></p>
+ 3) Navegue até a pasta em que o repositório foi clonado e use o comando
+    ```bash
+     mvn javafx:run
