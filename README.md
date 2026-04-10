@@ -24,6 +24,6 @@
   Git clone https://github.com/GuiGarbin/Controle_Financeiro_De_Viagens
   ```
  3) Navegue até a pasta em que o repositório foi clonado e use o comando
-    ```bash
-     mvn javafx:run
-     ```
+  ```bash
+  mvn javafx:run
+  ```
