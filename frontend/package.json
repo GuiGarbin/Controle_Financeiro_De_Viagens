@@ -1,0 +1,44 @@
+{
+  "name": "controle-financeiro-viagens",
+  "version": "1.0.0",
+  "main": "electron/main.cjs",
+   "scripts": {
+    "dev:vite":     "vite",
+     "dev:electron": "wait-on tcp:5173 && electron electron/main.cjs",
+    "dev":          "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
+    "build:react":  "vite build",
+    "copy:jar":     "copy ..\\backend\\target\\backend-1.0-SNAPSHOT.jar .\\resources\\backend\\app.jar",
+     "build:exe":    "npm run copy:jar && npm run build:react && electron-builder --win"
+  },
+  "build": {
+    "appId": "com.example.tripfinance",
+    "productName": "Controle Financeiro de Viagens",
+    "directories": { "output": "release" },
+    "win": { "target": "nsis" },
+    "files": [
+      "dist/**",
+      "electron/**"
+    ],
+    "asarUnpack": [
+      "electron/preload.cjs"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/backend/app.jar",
+        "to": "backend/app.jar"
+      }
+    ]
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "concurrently":         "^8.0.0",
+    "electron":             "^30.0.0",
+    "electron-builder":     "^24.0.0",
+    "vite":                 "^5.0.0",
+    "wait-on":              "^7.0.0"
+  },
+  "dependencies": {
+    "react":     "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}

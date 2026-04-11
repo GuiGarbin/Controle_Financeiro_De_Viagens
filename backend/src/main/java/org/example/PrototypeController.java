@@ -1,24 +1,16 @@
 package org.example;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class PrototypeController {
-    @FXML
-    private Label nameLabel;
-
-    @FXML
-    private TextField textField;
-
-    @FXML
-    private PasswordField passwordField;
-
-    @FXML
-    private void handleSubmit(){
-        String name = textField.getText();
-        String pwd = passwordField.getText();
-        nameLabel.setText("Olá " + name + ". Pwd: " + pwd);
+    @PostMapping("/echo")
+    public EchoResponse echo(@RequestBody EchoRequest request) {
+        return new EchoResponse(request.text());
     }
+
+    record EchoRequest(String text){}
+    record EchoResponse(String result) {}
 }
