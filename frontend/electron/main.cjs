@@ -13,6 +13,11 @@ function startJava() {
 
     console.log('Starting Java from:', jarPath)
 
+    console.log('JAR path:', jarPath)
+
+    const fs = require('fs')
+    console.log('JAR exists:', fs.existsSync(jarPath))
+
     javaProcess = spawn('java', ['-jar', jarPath], {
         stdio: ['ignore', 'pipe', 'pipe']
     })
