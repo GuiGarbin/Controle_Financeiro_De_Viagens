@@ -18,10 +18,10 @@
  Operações de registro, cálculo e conversão offline
 
  # Instalação
- 1) **Certifique-se que você tem o [Java 21](https://jdk.java.net/java-se-ri/21) e o [Maven](https://maven.apache.org/download.cgi) instalados**
+ 1) **Certifique-se que você tem o [Java 21](https://jdk.java.net/java-se-ri/21), [Maven](https://maven.apache.org/download.cgi), e o [Node.js](https://nodejs.org/en/download) instalados**
  2) **Clone o repositório com**
   ```bash
-  Git clone https://github.com/GuiGarbin/Controle_Financeiro_De_Viagens
+  git clone https://github.com/GuiGarbin/Controle_Financeiro_De_Viagens
   ```
   3) **Entre na pasta \frontend\ e rode o comando** 
   ```bash
