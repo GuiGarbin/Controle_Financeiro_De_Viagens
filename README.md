@@ -6,7 +6,7 @@
  Objetivo: Tornar mais fácil o controle financeiro durante uma viagem, focando no desenvolvimento de um software
  rápido e fácil de realizar as anotações de gastos e visualização fácil dos valores durante uma viagem.
 
- Projeto feito com JavaFx + maven.
+ Projeto Electron utilizando React para o Frontend e Java SpringBoot para o backend.
  
  Lista inicial de funcionalidades: Criação de conta e salvamento de dados
  Registro de orçamento
