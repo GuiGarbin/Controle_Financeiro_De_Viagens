@@ -1,5 +1,15 @@
 package org.example;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Main {
+    public static void main (String[] args){
+        SpringApplication.run(Main.class, args);
+    }
+}
+=======
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,3 +35,4 @@ public class Main extends Application {
         launch();
     }
 }
+
