@@ -6,7 +6,11 @@
  Objetivo: Tornar mais fácil o controle financeiro durante uma viagem, focando no desenvolvimento de um software
  rápido e fácil de realizar as anotações de gastos e visualização fácil dos valores durante uma viagem.
 
- Projeto Electron utilizando React para o Frontend e Java SpringBoot para o backend.
+d
+ Projeto Electron utilizando React para o Frontend e Java SpringBoot para o backend.    
+=======
+ Projeto feito com JavaFx + maven.
+
  
  Lista inicial de funcionalidades: Criação de conta e salvamento de dados
  Registro de orçamento
@@ -18,6 +22,7 @@
  Operações de registro, cálculo e conversão offline
 
  # Instalação
+
  1) **Certifique-se que você tem o [Java 21](https://jdk.java.net/java-se-ri/21), [Maven](https://maven.apache.org/download.cgi), e o [Node.js](https://nodejs.org/en/download) instalados**
  2) **Clone o repositório com**
   ```bash
@@ -65,3 +70,14 @@ npm run build:exe
 ``` 
 
 <p>Essa opção deve ser usada para empacotar o aplicativo para produção.</p><p>Após a compilação, será gerado um instalador na pasta \frontend\release, que pode ser executado para fazer a instalação do aplicativo.</p><p> Note que após a build, mudanças de código não surtirão efeito imediato: será necessário compilar a instalar o exe novamente.
+=======
+ 1) Certifique-se que você tem o [Java 21](https://jdk.java.net/java-se-ri/21) e o [Maven](https://maven.apache.org/download.cgi) instalados
+ 2) **Clone o repositório com**
+  ```bash
+  Git clone https://github.com/GuiGarbin/Controle_Financeiro_De_Viagens
+  ```
+ 3) Navegue até a pasta em que o repositório foi clonado e use o comando
+  ```bash
+  mvn javafx:run
+  ```
+
