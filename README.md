@@ -6,7 +6,7 @@
  Objetivo: Tornar mais fácil o controle financeiro durante uma viagem, focando no desenvolvimento de um software
  rápido e fácil de realizar as anotações de gastos e visualização fácil dos valores durante uma viagem.
 
- Projeto feito com JavaFx + maven.
+ Projeto Electron utilizando React para o Frontend e Java SpringBoot para o backend.
  
  Lista inicial de funcionalidades: Criação de conta e salvamento de dados
  Registro de orçamento
@@ -18,10 +18,10 @@
  Operações de registro, cálculo e conversão offline
 
  # Instalação
- 1) **Certifique-se que você tem o [Java 21](https://jdk.java.net/java-se-ri/21) e o [Maven](https://maven.apache.org/download.cgi) instalados**
+ 1) **Certifique-se que você tem o [Java 21](https://jdk.java.net/java-se-ri/21), [Maven](https://maven.apache.org/download.cgi), e o [Node.js](https://nodejs.org/en/download) instalados**
  2) **Clone o repositório com**
   ```bash
-  Git clone https://github.com/GuiGarbin/Controle_Financeiro_De_Viagens
+  git clone https://github.com/GuiGarbin/Controle_Financeiro_De_Viagens
   ```
   3) **Entre na pasta \frontend\ e rode o comando** 
   ```bash
