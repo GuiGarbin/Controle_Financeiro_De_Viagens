@@ -1,4 +1,4 @@
-package org.example.auth;
+package org.example.users.auth;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;

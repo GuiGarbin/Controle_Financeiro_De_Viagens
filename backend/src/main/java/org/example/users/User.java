@@ -10,12 +10,8 @@ public class User {
     private String password;
     private String userId;
 
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
+    public User(String fullName, LocalDate birthDate){
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
     }
 
     public String getFullName() {
@@ -26,12 +22,12 @@ public class User {
         this.fullName = fullName;
     }
 
-    public String getPassword() {
-        return password;
+    public LocalDate getBirthDate() {
+        return birthDate;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
     public String getEmail() {
@@ -40,6 +36,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getUserId() {
