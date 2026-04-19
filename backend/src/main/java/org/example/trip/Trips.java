@@ -15,9 +15,7 @@ public class Trips {
     private int id=0;
     private String name;
     private double budget;
-    private List<Double> budgetPerDay;
     private double convertedBudget;
-    private List<Double> convertedBudgetPerDay;
     private String description;
     private String destination;
     private String currency;
@@ -152,4 +150,11 @@ public class Trips {
         this.convertedBudget = convertedBudget;
     }
 
+    public List<DailyBudget> getDailyBudgetList() {
+        return dailyBudgetList;
+    }
+
+    public void setDailyBudgetList(List<DailyBudget> dailyBudgetList) {
+        this.dailyBudgetList = dailyBudgetList;
+    }
 }

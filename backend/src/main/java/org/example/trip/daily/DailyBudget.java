@@ -43,4 +43,12 @@ public class DailyBudget {
     public void setExpenses(List<Expenses> expenses) {
         this.expenses = expenses;
     }
+
+    public double getConvertedBudget() {
+        return convertedBudget;
+    }
+
+    public void setConvertedBudget(double convertedBudget) {
+        this.convertedBudget = convertedBudget;
+    }
 }

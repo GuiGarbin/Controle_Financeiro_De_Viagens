@@ -12,21 +12,29 @@ import java.util.Scanner;
 
 public class TripController {
     public List<Trips> tripsList = new ArrayList<>();
+    Trips trip;
+    ExpensesController controller;
 
     public void TripController(){
-
         criarDadosFalsos();
-        Trips trip = tripsList.get(0);
-        double gasto = 5;
-        System.out.println(trip.getBudget());
-        Expenses expenses = new Expenses(trip.getId(), "a", gasto, "yen", "nada");
-        addExpensive(expenses);
-        ExpensesController controller = new ExpensesController(trip);
+        testeDeSaida(5);
+    }
 
+
+    //classe teste para se a saida esta como deveria
+    private void testeDeSaida(double gasto){
+        System.out.println(trip.getBudget());
+        Expenses expenses = new Expenses(trip.getId(), "a", 5, "yen", "nada");
+        addExpensive(expenses);
         System.out.println(controller.convertCurrency(gasto));
 
         System.out.println(trip.getTuristicPoint(0).getCost() + " " + trip.getTuristicPoint(0).getName());
         System.out.println(trip.getConvertedBudget());
+
+        for(int i=0;i<trip.getDailyBudgetList().size();i++){
+            System.out.println(trip.getDailyBudgetList().get(i).getDate());
+            System.out.println(trip.getDailyBudgetList().get(i).getBudget() + " " + trip.getDailyBudgetList().get(i).getConvertedBudget());
+        }
     }
 
     private void addExpensive(Expenses expenses){
@@ -35,41 +43,7 @@ public class TripController {
         controller.addExpensive(expenses);
     }
 
-    private void menu(){
-        Scanner scanner = new Scanner(System.in);
-        User user = new User("Guilherme");
-        System.out.println("Criando uma nova viagem");
-        System.out.println("NOME:");
-        String nome = scanner.nextLine();
-        System.out.println("orcamento:");
-        double budget = scanner.nextDouble();
-        System.out.println("DESCRICAO");
-        String descricao = scanner.nextLine();
-        System.out.println("DESTINO");
-        String destino = scanner.nextLine();
-        System.out.println("MOEDA DO LUGAR");
-        String moeda = scanner.nextLine();
-        System.out.println("DIA DE INICIO/nex:2026-04-18");
-        String datePorExtenso = scanner.nextLine();
-        LocalDate dataConvertida = LocalDate.parse(datePorExtenso);
-        System.out.println("DIA FINAL/nex:2026-04-18");
-        String dataFinalPorExtenso = scanner.nextLine();
-        LocalDate dataFinalConvertida = LocalDate.parse(dataFinalPorExtenso);
-
-        Trips trip = new Trips(
-                nome,
-                budget,
-                descricao,
-                destino,
-                moeda,
-                dataConvertida,
-                dataFinalConvertida,
-                user
-        );
-
-        tripsList.add(trip);
-    }
-
+    //classe para criar dados falsos para testes
     private void criarDadosFalsos(){
         Trips trips = new Trips(
                 "japao",
@@ -77,8 +51,8 @@ public class TripController {
                 "nada",
                 "japao",
                 "yen",
-                LocalDate.now(),
-                LocalDate.now(),
+                LocalDate.parse("2026-04-20"),
+                LocalDate.parse("2026-04-24"),
                 new User("gui")
         );
 
@@ -86,5 +60,7 @@ public class TripController {
         trips.addTuristicPoint(turisticPoint);
 
         tripsList.add(trips);
+        trip = tripsList.get(0);
+        controller = new ExpensesController(trip);
     }
 }
