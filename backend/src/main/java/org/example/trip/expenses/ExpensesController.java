@@ -9,7 +9,7 @@ public class ExpensesController {
         this.trips = trips;
     }
 
-    public double convertExpense(double value) {
+    public double convertCurrency(double value) {
         return value*= trips.getCurrency();
     }
 }

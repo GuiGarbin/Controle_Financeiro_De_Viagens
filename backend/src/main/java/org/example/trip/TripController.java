@@ -7,7 +7,6 @@ import org.example.users.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,11 +24,11 @@ public class TripController {
 
         ExpensesController controller = new ExpensesController(trip);
 
-        System.out.println(controller.convertExpense(gasto));
+        System.out.println(controller.convertCurrency(gasto));
 
         System.out.println(trip.getExpense(0).getAmount());
         System.out.println(trip.getTuristicPoint(0).getCost() + " " + trip.getTuristicPoint(0).getName());
-        System.out.println(trip.getBudget());
+        System.out.println(trip.getConvertedBudget());
     }
 
     private void menu(){

@@ -1,18 +1,19 @@
 package org.example.trip;
 
 import org.example.trip.expenses.Expenses;
+import org.example.trip.expenses.ExpensesController;
 import org.example.trip.expenses.TuristicPoint;
 import org.example.users.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Trips {
     private int id=0;
     private String name;
     private double budget;
+    private double convertedBudget;
     private String description;
     private String destination;
     private String currency;
@@ -24,6 +25,7 @@ public class Trips {
     private User createdBy;
     private LocalDate createdAt;
     private LocalDate updatedAt;
+    private ExpensesController controller;
 
     public Trips(String name,
                  double budget,
@@ -32,18 +34,21 @@ public class Trips {
                  String currency,
                  LocalDate startDate, LocalDate endDate,
                  User createdBy) {
+
         this.id = this.id++;
         this.name = name;
-        this.budget = budget;
         this.description = description;
         this.destination = destination;
         this.currency = currency;
+        this.budget = budget;
         this.status = true;
         this.startDate = startDate;
         this.endDate = endDate;
         this.createdBy = createdBy;
         this.createdAt = LocalDate.now();
         this.updatedAt = LocalDate.now();
+        controller = new ExpensesController(this);
+        this.convertedBudget = controller.convertCurrency(budget);
     }
 
     public int getId() {
@@ -112,6 +117,7 @@ public class Trips {
     public void addExpensive(Expenses expensive){
         this.listExpenses.add(expensive);
         budget-=expensive.getAmount();
+        convertedBudget = controller.convertCurrency(budget);
     }
 
 
@@ -145,5 +151,13 @@ public class Trips {
 
     public void setBudget(double budget) {
         this.budget = budget;
+    }
+
+    public double getConvertedBudget() {
+        return convertedBudget;
+    }
+
+    public void setConvertedBudget(double convertedBudget) {
+        this.convertedBudget = convertedBudget;
     }
 }
