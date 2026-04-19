@@ -14,6 +14,10 @@ public class User {
 
     }
 
+    public User(String fullName) {
+        this.fullName = fullName;
+    }
+
     public String getFullName() {
         return fullName;
     }
