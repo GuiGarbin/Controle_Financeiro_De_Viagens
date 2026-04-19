@@ -20,15 +20,19 @@ public class TripController {
         double gasto = 5;
         System.out.println(trip.getBudget());
         Expenses expenses = new Expenses(trip.getId(), "a", gasto, "yen", "nada");
-        trip.addExpensive(expenses);
-
+        addExpensive(expenses);
         ExpensesController controller = new ExpensesController(trip);
 
         System.out.println(controller.convertCurrency(gasto));
 
-        System.out.println(trip.getExpense(0).getAmount());
         System.out.println(trip.getTuristicPoint(0).getCost() + " " + trip.getTuristicPoint(0).getName());
         System.out.println(trip.getConvertedBudget());
+    }
+
+    private void addExpensive(Expenses expenses){
+        Trips trips = tripsList.getFirst();
+        ExpensesController controller = new ExpensesController(trips);
+        controller.addExpensive(expenses);
     }
 
     private void menu(){

@@ -1,11 +1,13 @@
 package org.example.trip;
 
+import org.example.trip.daily.DailyBudget;
 import org.example.trip.expenses.Expenses;
 import org.example.trip.expenses.ExpensesController;
 import org.example.trip.expenses.TuristicPoint;
 import org.example.users.User;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +15,14 @@ public class Trips {
     private int id=0;
     private String name;
     private double budget;
+    private List<Double> budgetPerDay;
     private double convertedBudget;
+    private List<Double> convertedBudgetPerDay;
     private String description;
     private String destination;
     private String currency;
     private boolean status;
-    private List<Expenses> listExpenses = new ArrayList<>();
+    private List<DailyBudget> dailyBudgetList = new ArrayList<>();
     private List<TuristicPoint> listTuristic = new ArrayList<>();
     private LocalDate startDate;
     private LocalDate endDate;
@@ -34,7 +38,6 @@ public class Trips {
                  String currency,
                  LocalDate startDate, LocalDate endDate,
                  User createdBy) {
-
         this.id = this.id++;
         this.name = name;
         this.description = description;
@@ -49,6 +52,12 @@ public class Trips {
         this.updatedAt = LocalDate.now();
         controller = new ExpensesController(this);
         this.convertedBudget = controller.convertCurrency(budget);
+        long totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        double dailyBudget = budget / totalDays;
+        double convertedDailyBudget = controller.convertCurrency(dailyBudget);
+        for(int i=0;i<totalDays;i++){
+            dailyBudgetList.add(new DailyBudget(startDate.plusDays(i), dailyBudget, convertedDailyBudget, null));
+        }
     }
 
     public int getId() {
@@ -102,24 +111,6 @@ public class Trips {
         this.status = status;
     }
 
-    public List<Expenses> getListExpenses() {
-        return listExpenses;
-    }
-
-    public Expenses getExpense(int index){
-        return listExpenses.get(index);
-    }
-
-    public void setListExpenses(List<Expenses> listExpenses) {
-        this.listExpenses = listExpenses;
-    }
-
-    public void addExpensive(Expenses expensive){
-        this.listExpenses.add(expensive);
-        budget-=expensive.getAmount();
-        convertedBudget = controller.convertCurrency(budget);
-    }
-
 
     public User getCreatedBy() {
         return createdBy;
@@ -160,4 +151,5 @@ public class Trips {
     public void setConvertedBudget(double convertedBudget) {
         this.convertedBudget = convertedBudget;
     }
+
 }

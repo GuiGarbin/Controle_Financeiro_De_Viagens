@@ -12,4 +12,10 @@ public class ExpensesController {
     public double convertCurrency(double value) {
         return value*= trips.getCurrency();
     }
+
+    public void addExpensive(Expenses expenses){
+        trips.setBudget(trips.getBudget()-expenses.getAmount());
+        trips.setConvertedBudget(convertCurrency(trips.getBudget()));
+        
+    }
 }
