@@ -49,13 +49,17 @@ public class Trips {
         this.createdAt = LocalDate.now();
         this.updatedAt = LocalDate.now();
         controller = new ExpensesController(this);
-        this.convertedBudget = controller.convertCurrency(budget);
+        this.convertedBudget = convertValue(budget);
         long totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
         double dailyBudget = budget / totalDays;
-        double convertedDailyBudget = controller.convertCurrency(dailyBudget);
+        double convertedDailyBudget = convertValue(dailyBudget);
         for(int i=0;i<totalDays;i++){
-            dailyBudgetList.add(new DailyBudget(startDate.plusDays(i), dailyBudget, convertedDailyBudget, null));
+            dailyBudgetList.add(new DailyBudget(startDate.plusDays(i), dailyBudget, convertedDailyBudget));
         }
+    }
+
+    private double convertValue(double value){
+        return value*=getCurrencyValue();
     }
 
     public int getId() {
@@ -90,11 +94,15 @@ public class Trips {
         this.destination = destination;
     }
 
-    public double getCurrency() {
+    public double getCurrencyValue() {
         if (currency.equalsIgnoreCase("yen")) return 31.86;
         else if (currency.equalsIgnoreCase("dolar")) return 0.20;
         else if (currency.equalsIgnoreCase("euro")) return 0.17;
         else return 0;
+    }
+
+    public String getCurrency(){
+        return this.currency;
     }
 
     public void setCurrency(String currency) {
@@ -134,11 +142,11 @@ public class Trips {
         return listTuristic.get(index);
     }
 
-    public double getBudget() {
+    public double getInitialBudget() {
         return budget;
     }
 
-    public void setBudget(double budget) {
+    public void setInitialBudget(double budget) {
         this.budget = budget;
     }
 

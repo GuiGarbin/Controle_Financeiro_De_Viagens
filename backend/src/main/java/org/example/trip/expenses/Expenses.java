@@ -7,19 +7,23 @@ public class Expenses {
     private int tripId;
     private String description;
     private double amount;
+    private double currencyValue;
     private String currency;
     private Date date;
     private String notes;
     private Date createdAt;
+    ExpensesController controller;
 
     public Expenses(int tripId,
                     String description,
                     double amount,
+                    double currencyValue,
                     String currency,
                     String notes) {
         this.tripId = tripId;
         this.description = description;
         this.amount = amount;
+        this.currencyValue = currencyValue;
         this.currency = currency;
         this.date = new Date();
         this.notes = notes;
@@ -88,5 +92,17 @@ public class Expenses {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public double getConvertedValue(){
+        return this.amount*this.currencyValue;
+    }
+
+    public double getCurrencyValue() {
+        return currencyValue;
+    }
+
+    public void setCurrencyValue(double currencyValue) {
+        this.currencyValue = currencyValue;
     }
 }

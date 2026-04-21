@@ -1,23 +1,26 @@
 package org.example.trip.daily;
 
 import org.example.trip.expenses.Expenses;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DailyBudget {
     private LocalDate date;
     private double budget;
     private double convertedBudget;
-    private List<Expenses> expenses;
+    private List<Expenses> listExpenses;
 
-    public DailyBudget(LocalDate date, double budget, double convertedBudget, List<Expenses> expenses) {
+    public DailyBudget(LocalDate date, double budget, double convertedBudget) {
         this.date = date;
         this.budget = budget;
         this.convertedBudget = convertedBudget;
-        this.expenses = expenses;
+        this.listExpenses = new ArrayList<>();
+    }
+
+    public void addExpense(Expenses expenses){
+        this.listExpenses.add(expenses);
     }
 
     public LocalDate getDate() {
@@ -36,12 +39,12 @@ public class DailyBudget {
         this.budget = budget;
     }
 
-    public List<Expenses> getExpenses() {
-        return expenses;
+    public List<Expenses> getListExpenses() {
+        return listExpenses;
     }
 
-    public void setExpenses(List<Expenses> expenses) {
-        this.expenses = expenses;
+    public void setListExpenses(List<Expenses> listExpenses) {
+        this.listExpenses = listExpenses;
     }
 
     public double getConvertedBudget() {
