@@ -41,7 +41,7 @@ public class TripController {
 
         for(int i=0;i<trip.getDailyBudgetList().size();i++){
             System.out.println(trip.getDailyBudgetList().get(i).getDate());
-            System.out.println(trip.getDailyBudgetList().get(i).getBudget() + " " + trip.getDailyBudgetList().get(i).getConvertedBudget());
+            System.out.println(controller.verifyBudgetDay(i) + " " + trip.getDailyBudgetList().get(i).getConvertedBudget());
         }
         System.out.println(controller.verifyBudgetDay(1));
     }

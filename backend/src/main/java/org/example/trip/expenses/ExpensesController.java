@@ -26,6 +26,11 @@ public class ExpensesController {
 
     public void addExpensiveDay(Expenses expenses, int day){
         DailyBudget a = dailyBudgetList.get(day);
+        if(expenses.getCurrency().equalsIgnoreCase(trips.getCurrency())){
+            double inverted = 1 / expenses.getCurrencyValue();
+            double expenseConverted = expenses.getAmount() * inverted;
+            expenses.setAmount(expenseConverted);
+        }
         a.addExpense(expenses);
     }
 
