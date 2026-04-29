@@ -1,0 +1,20 @@
+package org.example.repository;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.model.Settlement;
+
+import java.nio.file.Path;
+import java.util.List;
+
+public class SettlementRepository extends JsonRepository<Settlement> {
+
+    public SettlementRepository(Path filePath, ObjectMapper objectMapper) {
+        super(filePath, objectMapper, new TypeReference<List<Settlement>>() {});
+    }
+
+    // Busca todos os acertos de uma viagem específica
+    public List<Settlement> findByTripId(String tripId) {
+        return findAllByField(Settlement::getTripId, tripId);
+    }
+}

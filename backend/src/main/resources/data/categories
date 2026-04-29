@@ -1,0 +1,8 @@
+[
+  { "id": "cat_food01", "name": "Food & Drinks", "icon": "utensils", "color": "#EF4444", "createdAt": "2026-01-01T00:00:00Z", "updatedAt": "2026-01-01T00:00:00Z" },
+  { "id": "cat_tran01", "name": "Transport", "icon": "car", "color": "#3B82F6", "createdAt": "2026-01-01T00:00:00Z", "updatedAt": "2026-01-01T00:00:00Z" },
+  { "id": "cat_acco01", "name": "Accommodation", "icon": "bed", "color": "#8B5CF6", "createdAt": "2026-01-01T00:00:00Z", "updatedAt": "2026-01-01T00:00:00Z" },
+  { "id": "cat_acti01", "name": "Activities", "icon": "ticket", "color": "#F59E0B", "createdAt": "2026-01-01T00:00:00Z", "updatedAt": "2026-01-01T00:00:00Z" },
+  { "id": "cat_shop01", "name": "Shopping", "icon": "shopping-bag", "color": "#10B981", "createdAt": "2026-01-01T00:00:00Z", "updatedAt": "2026-01-01T00:00:00Z" },
+  { "id": "cat_othe01", "name": "Other", "icon": "ellipsis", "color": "#6B7280", "createdAt": "2026-01-01T00:00:00Z", "updatedAt": "2026-01-01T00:00:00Z" }
+]

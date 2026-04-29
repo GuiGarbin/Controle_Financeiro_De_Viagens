@@ -2,7 +2,7 @@ package org.example.users.auth;
 
 import org.springframework.stereotype.Service;
 
-@Service  // tells Spring this is a service it should manage
+@Service // tells Spring this is a service it should manage
 public class AuthService {
 
     // Hardcoded credentials for now.

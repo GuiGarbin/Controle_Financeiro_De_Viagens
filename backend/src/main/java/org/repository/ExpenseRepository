@@ -1,0 +1,20 @@
+package org.example.repository;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.model.Expense;
+
+import java.nio.file.Path;
+import java.util.List;
+
+public class ExpenseRepository extends JsonRepository<Expense> {
+
+    public ExpenseRepository(Path filePath, ObjectMapper objectMapper) {
+        super(filePath, objectMapper, new TypeReference<List<Expense>>() {});
+    }
+
+    // Busca todas as despesas de uma viagem específica
+    public List<Expense> findByTripId(String tripId) {
+        return findAllByField(Expense::getTripId, tripId);
+    }
+}
