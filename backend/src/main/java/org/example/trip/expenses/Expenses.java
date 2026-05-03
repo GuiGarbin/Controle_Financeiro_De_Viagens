@@ -30,6 +30,10 @@ public class Expenses {
         this.createdAt = new Date();
     }
 
+    public double getConvertedAmount(){
+        return this.amount * (1/currencyValue);
+    }
+
     public int getId() {
         return id;
     }

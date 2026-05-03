@@ -15,7 +15,6 @@ public class Trips {
     private int id=0;
     private String name;
     private double budget;
-    private double convertedBudget;
     private String description;
     private String destination;
     private String currency;
@@ -27,7 +26,6 @@ public class Trips {
     private User createdBy;
     private LocalDate createdAt;
     private LocalDate updatedAt;
-    private ExpensesController controller;
 
     public Trips(String name,
                  double budget,
@@ -41,21 +39,42 @@ public class Trips {
         this.description = description;
         this.destination = destination;
         this.currency = currency;
-        this.budget = budget;
+        this.budget = budget*getCurrencyValue();
         this.status = true;
         this.startDate = startDate;
         this.endDate = endDate;
         this.createdBy = createdBy;
         this.createdAt = LocalDate.now();
         this.updatedAt = LocalDate.now();
-        controller = new ExpensesController(this);
-        this.convertedBudget = convertValue(budget);
+        createDays();
+    }
+
+    private void createDays(){
         long totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
         double dailyBudget = budget / totalDays;
-        double convertedDailyBudget = convertValue(dailyBudget);
         for(int i=0;i<totalDays;i++){
-            dailyBudgetList.add(new DailyBudget(startDate.plusDays(i), dailyBudget, convertedDailyBudget));
+            dailyBudgetList.add(new DailyBudget(startDate.plusDays(i), dailyBudget));
         }
+    }
+
+    public double verifyRemainBudgetTrip(){
+        double remain = this.budget;
+        for (DailyBudget dailyBudget : dailyBudgetList) {
+            remain -= dailyBudget.totalExpense();
+        }
+        return remain;
+    }
+
+    public double verifyRemainBudgetTripReal(){
+        return verifyRemainBudgetTrip() * (1 / getCurrencyValue());
+    }
+
+    public double getBudgetReal(){
+        return budget * (1 / getCurrencyValue());
+    }
+
+    public DailyBudget verifyDay(int day){
+        return dailyBudgetList.get(day);
     }
 
     private double convertValue(double value){
@@ -148,14 +167,6 @@ public class Trips {
 
     public void setInitialBudget(double budget) {
         this.budget = budget;
-    }
-
-    public double getConvertedBudget() {
-        return convertedBudget;
-    }
-
-    public void setConvertedBudget(double convertedBudget) {
-        this.convertedBudget = convertedBudget;
     }
 
     public List<DailyBudget> getDailyBudgetList() {

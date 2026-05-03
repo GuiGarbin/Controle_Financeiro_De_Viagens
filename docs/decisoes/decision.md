@@ -7,3 +7,6 @@ obj dailybudget possui uma list de expensives>
 
 Foi decidido NAO MEXER variavel budget, o calculo sera feito calculando
 a lista de expenses
+
+A classe expenseController deixa de concentrar funcoes de conversao e calculo
+de orcamento restante e as contas passam a ser feitas pelos proprios objetos

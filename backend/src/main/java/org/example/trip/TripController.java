@@ -14,42 +14,46 @@ import java.util.Scanner;
 public class TripController {
     public List<Trips> tripsList = new ArrayList<>();
     Trips trip;
-    ExpensesController controller;
 
     public void TripController(){
         criarDadosFalsos();
         testeDeSaida();
-        //menu();
     }
 
     //classe teste para se a saida esta como deveria
     private void testeDeSaida(){
         //Teste de saldo inicial
-        System.out.println("Saldo inicial: " + trip.getInitialBudget());
-        System.out.println("Saldo total: " + controller.verifyBudgetTrip());
+        System.out.println("Saldo inicial em moeda estrangeira: " + trip.getInitialBudget());
+        System.out.println("Saldo inicial em moeda local: " + trip.getBudgetReal());
+        System.out.println("Saldo total em moeda estrangeira: " + trip.verifyRemainBudgetTrip());
+        System.out.println("Saldo total em moeda local: " + trip.verifyRemainBudgetTripReal());
+
+        //Teste de divisao de orcamento por dia
+        System.out.println("Saldo diario em moeda estrangeira: " + trip.verifyDay(0).getBudget());
+        System.out.println("Saldo diario em moeda local: " + trip.verifyDay(0).getBudgetReal(trip.getCurrencyValue()));
 
         //Teste de adicao de gasto (somente diario)
         Expenses expenses = new Expenses(trip.getId(), "gasto teste", 300, trip.getCurrencyValue(), "yen", "nada");
-        addExpensive(expenses, 1);
-        System.out.println("Saldo restante total: " + controller.verifyBudgetTrip());
-        System.out.println("Saldo restante do dia: " + controller.verifyBudgetDay(0));
+        addExpensive(expenses);
+        System.out.println("Saldo restante total em moeda estrangeira apos gasto: " + trip.verifyRemainBudgetTrip());
+        System.out.println("Saldo restante total em moeda local apos gasto: " + trip.verifyRemainBudgetTripReal());
+        System.out.println("Saldo restante do dia: " + trip.verifyDay(0).verifyBudget());
 
         //Teste de conversao cambial
-        System.out.println("Converter gasto: " + controller.convertCurrency(expenses));
+        System.out.println("Converter gasto: " + trip.verifyDay(0).getExpense(0).getConvertedAmount());
 
-        System.out.println(trip.getTuristicPoint(0).getCost() + " " + trip.getTuristicPoint(0).getName());
-
+        //Teste de dados diarios
         for(int i=0;i<trip.getDailyBudgetList().size();i++){
-            System.out.println(trip.getDailyBudgetList().get(i).getDate());
-            System.out.println(controller.verifyBudgetDay(i) + " " + trip.getDailyBudgetList().get(i).getConvertedBudget());
+            System.out.println("Dia :" + trip.getDailyBudgetList().get(i).getDate());
+            System.out.println("Saldo restante em moeda estrangeira: " + trip.getDailyBudgetList().get(i).verifyBudget());
+            System.out.println("Saldo restante em moeda local: " + trip.getDailyBudgetList().get(i).verifyBudgetReal(trip.getCurrencyValue()));
         }
-        System.out.println(controller.verifyBudgetDay(1));
     }
 
-    private void addExpensive(Expenses expenses, int day){
+    private void addExpensive(Expenses expenses){
         Trips trips = tripsList.getFirst();
-        ExpensesController controller = new ExpensesController(trips);
-        controller.addExpensiveDay(expenses, day-1);
+        trips.verifyDay(0).addExpense(expenses, trips);
+
     }
 
     //classe para criar dados falsos para testes
@@ -70,7 +74,6 @@ public class TripController {
 
         tripsList.add(trips);
         trip = tripsList.get(0);
-        controller = new ExpensesController(trip);
     }
 
     private void menu(){
@@ -78,13 +81,12 @@ public class TripController {
         while (on){
             Scanner scanner = new Scanner(System.in);
             System.out.println("=====================");
-            System.out.println("Orcamento total: " + controller.verifyBudgetTrip());
-            System.out.println("Orcamento total convertido: " + trip.getConvertedBudget());
+            System.out.println("Orcamento total: " + trip.getInitialBudget());
             System.out.println("Conferir dia: ");
             for (int i=0;i<trip.getDailyBudgetList().size();i++){
                 System.out.println("Dia " + i + ": " + trip.getDailyBudgetList().get(i).getDate());
                 System.out.println("Orcamento: " + trip.getDailyBudgetList().get(i).getBudget());
-                System.out.println("Orcamento convertido: " + trip.getDailyBudgetList().get(i).getConvertedBudget());
+                //System.out.println("Orcamento convertido: " + trip.getDailyBudgetList().get(i).getConvertedBudget());
             }
             System.out.println("Selecione o dia: ");
             int day = scanner.nextInt();
@@ -95,7 +97,7 @@ public class TripController {
                 case 1:
                     System.out.println("qual o valor do gasto?");
                     double value = scanner.nextDouble();
-                    addExpensive(new Expenses(trip.getId(), null, value, trip.getCurrencyValue(), "yen", null), day);
+                    addExpensive(new Expenses(trip.getId(), null, value, trip.getCurrencyValue(), "yen", null));
                     break;
                 case 0:
                     on=false;
