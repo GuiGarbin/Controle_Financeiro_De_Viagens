@@ -1,13 +1,13 @@
 import styles from './DashBoardPage.module.css'
 
-const CURRENCY_VALUE = 31.86  // yen — matches Trips.getCurrencyValue()
+const CURRENCY_VALUE = 31.86  // yen - por enquanto
 
 const trip = {
     name: 'Japão',
     destination: 'Japão',
     currency: 'yen',
     symbol: '¥',
-    initialBudget: 2000 * CURRENCY_VALUE,  // budget * currencyValue, like Trips constructor
+    initialBudget: 2000 * CURRENCY_VALUE,  //
     startDate: '20 abr',
     endDate: '24 abr 2026',
     createdBy: 'Gui',
