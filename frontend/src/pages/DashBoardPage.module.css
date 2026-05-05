@@ -1,0 +1,53 @@
+.shell { display: flex; min-height: 100vh; background: #f5f5f4; }
+
+.sidebar { width: 196px; background: #f1efe8; border-right: 0.5px solid #e7e5e4; padding: 20px 12px; display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
+.logo { display: flex; align-items: center; gap: 8px; padding: 4px 10px 20px; }
+.logoIcon { width: 26px; height: 26px; border-radius: 6px; background: #1c1917; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+.logoText { font-size: 13px; font-weight: 500; color: #1c1917; }
+.navSection { font-size: 10px; color: #a8a29e; padding: 10px 10px 4px; letter-spacing: 0.06em; }
+.navItem { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 8px; font-size: 13px; color: #78716c; cursor: pointer; }
+.navItem.active { background: #ffffff; color: #1c1917; font-weight: 500; border: 0.5px solid #e7e5e4; }
+.tripPill { margin-top: auto; background: #fff; border: 0.5px solid #e7e5e4; border-radius: 8px; padding: 10px 12px; }
+.tripPillLabel { font-size: 10px; color: #a8a29e; margin-bottom: 2px; }
+.tripPillName { font-size: 13px; font-weight: 500; color: #1c1917; }
+.tripPillDates { font-size: 11px; color: #a8a29e; margin-top: 2px; }
+
+.main { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.header { display: flex; align-items: flex-end; justify-content: space-between; }
+.pageTitle { font-size: 18px; font-weight: 500; color: #1c1917; }
+.pageSubtitle { font-size: 12px; color: #a8a29e; margin-top: 2px; }
+.badge { font-size: 11px; padding: 4px 10px; border-radius: 99px; border: 0.5px solid #e7e5e4; color: #78716c; background: #fff; }
+
+.metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.metric { background: #f1efe8; border-radius: 8px; padding: 14px; }
+.metricLabel { font-size: 11px; color: #78716c; margin-bottom: 6px; }
+.metricValue { font-size: 20px; font-weight: 500; color: #1c1917; }
+.metricSub { font-size: 11px; color: #a8a29e; margin-top: 3px; }
+.warn { color: #854F0B; }
+
+.row { display: flex; gap: 16px; flex: 1; }
+.card { background: #fff; border: 0.5px solid #e7e5e4; border-radius: 12px; padding: 16px; }
+.cardMuted { background: #f1efe8; }
+.cardTitle { font-size: 11px; font-weight: 500; color: #78716c; letter-spacing: 0.05em; margin-bottom: 14px; }
+.rightCol { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+.dayRow { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid #e7e5e4; }
+.dayRow:last-child { border-bottom: none; }
+.dayDate { font-size: 12px; color: #78716c; width: 56px; flex-shrink: 0; }
+.barWrap { flex: 1; height: 5px; background: #e7e5e4; border-radius: 99px; overflow: hidden; }
+.barFill { height: 100%; border-radius: 99px; background: #1c1917; }
+.dayAmount { font-size: 12px; color: #1c1917; width: 80px; text-align: right; flex-shrink: 0; }
+.dayConverted { font-size: 11px; color: #a8a29e; width: 64px; text-align: right; flex-shrink: 0; }
+
+.pointRow { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid #e7e5e4; }
+.pointRow:last-child { border-bottom: none; }
+.pointName { font-size: 13px; color: #1c1917; }
+.pointCost { font-size: 13px; font-weight: 500; color: #1c1917; }
+
+.progRow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.progLabel { font-size: 12px; color: #78716c; }
+.progValue { font-size: 13px; font-weight: 500; color: #1c1917; }
+.progTrack { height: 6px; background: #e7e5e4; border-radius: 99px; overflow: hidden; margin-bottom: 12px; }
+.progFill { height: 100%; border-radius: 99px; background: #1c1917; }
+.progFooter { display: flex; justify-content: space-between; }
+.progFootItem { font-size: 11px; color: #a8a29e; }

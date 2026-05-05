@@ -4,7 +4,9 @@ import { useState } from 'react'
 // The path './pages/LoginPage' means: go into the pages folder, get LoginPage.jsx
 import LoginPage from './pages/LoginPage'
 import BootPage from './pages/BootPage'
-import Dashboard from './pages/Dashboard'
+import RegisterPage from './pages/RegisterPage'
+import DashBoardPage from './pages/DashBoardPage'
+
 
 function App() {
   // This tracks which page to show.
@@ -33,8 +35,13 @@ function App() {
                       goToBoot={() => setCurrentPage('boot')}/>
         )}
 
-        {currentPage === 'dashboard' && (
-            <Dashboard ></Dashboard>
+        {currentPage === 'dashboard' && <DashBoardPage />}
+
+        {currentPage === 'register' && (
+            <RegisterPage
+                onRegisterSuccess={() => setCurrentPage('dashboard')}
+                goToBoot={() => setCurrentPage('boot')}
+            />
         )}
       </div>
   )
