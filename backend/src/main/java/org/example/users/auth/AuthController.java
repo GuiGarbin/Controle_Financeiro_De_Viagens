@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    // Spring automatically creates and injects the AuthService here.
-    // You never call 'new AuthService()' yourself.
+    // Spring vai criar uma instância de AuthService e injetar aqui automaticamente.
+    // você não precisa se preocupar com isso, apenas declare a dependência no construtor.
     private final AuthService authService;
     public AuthController(AuthService authService) {
         this.authService = authService;

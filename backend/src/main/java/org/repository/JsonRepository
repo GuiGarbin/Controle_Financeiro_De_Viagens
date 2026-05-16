@@ -4,13 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference; // classe para manter info
 import com.fasterxml.jackson.databind.ObjectMapper; // biblioteca para converter entre objetos Java e JSON
 import org.example.model.BaseEntity;
 
-import java.io.IOException;
-import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.function.Function;
+import java.io.IOException; // para tratar erros de leitura/escrita de arquivos
+import java.nio.file.*; // para manipulação de arquivos (Paths, Files, StandardCopyOption)
+import java.util.ArrayList; // para criar uma lista vazia caso o arquivo JSON não exista ou esteja vazio
+import java.util.List; // para trabalhar com listas de objetos
+import java.util.Optional; // para retornar um resultado que pode ou não conter um valor (ex: findById pode não encontrar o registro)
+import java.util.concurrent.locks.ReentrantReadWriteLock; // para controlar o acesso concorrente ao arquivo JSON, permitindo múltiplas leituras mas apenas uma escrita
+import java.util.function.Function; // para passar uma função que extrai um campo específico de um objeto (ex: Settlement::getTripId) ao buscar por esse campo
 
 public class JsonRepository<T extends BaseEntity> {
 
