@@ -10,7 +10,7 @@ public class UserRegisterService {
     public void UserRegisterService(String fullName, LocalDate birthDate, String userEmail, String userPassword){
         User newUser = new User(fullName, birthDate);
 
-        if (checkValidEmail(userEmail.toLowerCase())){
+        if (checkValidEmail(userEmail.toLowerCase())){ // email validation
             newUser.setEmail(userEmail.toLowerCase());
         }
 
