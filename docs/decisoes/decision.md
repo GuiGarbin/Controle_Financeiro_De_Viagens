@@ -10,3 +10,5 @@ a lista de expenses
 
 A classe expenseController deixa de concentrar funcoes de conversao e calculo
 de orcamento restante e as contas passam a ser feitas pelos proprios objetos
+
+

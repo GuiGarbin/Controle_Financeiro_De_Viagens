@@ -48,12 +48,18 @@ public class TripController {
             System.out.println("Saldo restante em moeda estrangeira: " + trip.getDailyBudgetList().get(i).verifyBudget());
             System.out.println("Saldo restante em moeda local: " + trip.getDailyBudgetList().get(i).verifyBudgetReal(trip.getCurrencyValue()));
         }
+
+        //Teste de segundo gasto
+        Expenses expenses2 = new Expenses(trip.getId(), "gasto teste", 600, trip.getCurrencyValue(), "yen", "nada");
+        addExpensive(expenses2);
+        System.out.println("Saldo restante total em moeda estrangeira apos gasto 2: " + trip.verifyRemainBudgetTrip());
+        System.out.println("Saldo restante total em moeda local apos gasto 2: " + trip.verifyRemainBudgetTripReal());
+        System.out.println("Saldo restante do dia: " + trip.verifyDay(0).verifyBudget());
     }
 
     private void addExpensive(Expenses expenses){
         Trips trips = tripsList.getFirst();
         trips.verifyDay(0).addExpense(expenses, trips);
-
     }
 
     //classe para criar dados falsos para testes
