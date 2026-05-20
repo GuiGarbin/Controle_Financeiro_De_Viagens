@@ -1,7 +1,7 @@
 package org.example.controller;
 
 import org.example.dto.request.SettleDebtRequest;
-import org.example.dto.response.ApiResponse;
+import org.example.dto.request.response.ApiResponse;
 import org.example.model.Settlement;
 import org.example.service.SettlementService;
 import org.springframework.http.ResponseEntity;

@@ -1,18 +1,18 @@
 package org.example.trip;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.example.model.BaseEntity;
 import org.example.trip.daily.DailyBudget;
-import org.example.trip.expenses.Expenses;
-import org.example.trip.expenses.ExpensesController;
 import org.example.trip.expenses.TuristicPoint;
 import org.example.users.User;
+import org.example.util.IdGenerator;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Trips {
-    private int id=0;
+public class Trip extends BaseEntity {
     private String name;
     private double budget;
     private String description;
@@ -24,17 +24,19 @@ public class Trips {
     private LocalDate startDate;
     private LocalDate endDate;
     private User createdBy;
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
 
-    public Trips(String name,
-                 double budget,
-                 String description,
-                 String destination,
-                 String currency,
-                 LocalDate startDate, LocalDate endDate,
-                 User createdBy) {
-        this.id = this.id++;
+    public Trip(){
+
+    }
+
+    public Trip(String name,
+                double budget,
+                String description,
+                String destination,
+                String currency,
+                LocalDate startDate, LocalDate endDate,
+                User createdBy) {
+        this.id = IdGenerator.forTrip();
         this.name = name;
         this.description = description;
         this.destination = destination;
@@ -44,8 +46,8 @@ public class Trips {
         this.startDate = startDate;
         this.endDate = endDate;
         this.createdBy = createdBy;
-        this.createdAt = LocalDate.now();
-        this.updatedAt = LocalDate.now();
+        this.createdAt = "hoje";
+        this.updatedAt = "hoje";
         createDays();
     }
 
@@ -69,6 +71,7 @@ public class Trips {
         return verifyRemainBudgetTrip() * (1 / getCurrencyValue());
     }
 
+    @JsonIgnore
     public double getBudgetReal(){
         return budget * (1 / getCurrencyValue());
     }
@@ -81,11 +84,11 @@ public class Trips {
         return value*=getCurrencyValue();
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -113,6 +116,7 @@ public class Trips {
         this.destination = destination;
     }
 
+    @JsonIgnore
     public double getCurrencyValue() {
         if (currency.equalsIgnoreCase("yen")) return 31.86;
         else if (currency.equalsIgnoreCase("dolar")) return 0.20;

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Expenses {
     private int id;
-    private int tripId;
+    private String tripId;
     private String description;
     private double amount;
     private double currencyValue;
@@ -14,7 +14,7 @@ public class Expenses {
     private Date createdAt;
     ExpensesController controller;
 
-    public Expenses(int tripId,
+    public Expenses(String tripId,
                     String description,
                     double amount,
                     double currencyValue,
@@ -42,11 +42,11 @@ public class Expenses {
         this.id = id;
     }
 
-    public int getTripId() {
+    public String getTripId() {
         return tripId;
     }
 
-    public void setTripId(int tripId) {
+    public void setTripId(String tripId) {
         this.tripId = tripId;
     }
 

@@ -3,7 +3,7 @@ package org.example.config;
 import com.fasterxml.jackson.annotation.JsonInclude; // para ignorar campos null no JSON
 import com.fasterxml.jackson.databind.ObjectMapper; // classe principal do Jackson para conversão Java <-> JSON
 import com.fasterxml.jackson.databind.SerializationFeature; // para configurar o formato do JSON (ex: indentado)
-import org.example.model.*; // importa as classes de modelo (User, Trip, Expense, etc.)
+import org.example.model.*; //
 import org.example.repository.*; // importa as classes de repositório (UserRepository, TripRepository, etc.)
 import org.springframework.context.annotation.Bean; // para registrar beans no contexto do Spring
 import org.springframework.context.annotation.Configuration; // para marcar esta classe como uma classe de configuração do Spring

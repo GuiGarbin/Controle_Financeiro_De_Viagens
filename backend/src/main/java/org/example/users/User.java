@@ -1,14 +1,20 @@
 package org.example.users;
 
+import org.example.model.BaseEntity;
+
 import java.time.*;
 
-public class User {
+public class User extends BaseEntity {
 
     private String fullName;
     private LocalDate birthDate;
     private String email;
     private String password;
     private String userId;
+
+    public User(){
+
+    }
 
     public User(String fullName, LocalDate birthDate){
 

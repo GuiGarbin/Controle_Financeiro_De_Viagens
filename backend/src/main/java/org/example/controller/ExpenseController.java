@@ -1,7 +1,7 @@
 package org.example.controller;
 
 import org.example.dto.request.CreateExpenseRequest;
-import org.example.dto.response.ApiResponse;
+import org.example.dto.request.response.ApiResponse;
 import org.example.model.Expense;
 import org.example.service.ExpenseService;
 import org.springframework.http.ResponseEntity;

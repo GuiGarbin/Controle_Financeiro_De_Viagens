@@ -2,7 +2,7 @@ package org.example.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference; // Importação necessária para usar TypeReference com generics
 import com.fasterxml.jackson.databind.ObjectMapper; // biblioteca para converter entre objetos Java e JSON
-import org.example.model.User; // Importação do modelo User, que é a entidade que este repositório irá gerenciar
+import org.example.users.User; // Importação do modelo User, que é a entidade que este repositório irá gerenciar
 
 import java.nio.file.Path; // para manipulação de arquivos (Paths, Files, StandardCopyOption)
 import java.util.List; // para trabalhar com listas de objetos

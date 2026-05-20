@@ -7,7 +7,7 @@ import org.example.model.Category; // Importação do modelo Category, que é a 
 import java.nio.file.Path;
 import java.util.List;
 
-public class CategoryRepository extends JsonRepository<Category> {
+public class CategoryRepository extends org.example.repository.JsonRepository<Category> {
 
     public CategoryRepository(Path filePath, ObjectMapper objectMapper) {
         super(filePath, objectMapper, new TypeReference<List<Category>>() {});

@@ -1,6 +1,6 @@
 package org.example.trip.daily;
 
-import org.example.trip.Trips;
+import org.example.trip.Trip;
 import org.example.trip.expenses.Expenses;
 
 import java.time.LocalDate;
@@ -11,6 +11,10 @@ public class DailyBudget {
     private LocalDate date;
     private double budget;
     private List<Expenses> listExpenses;
+
+    public DailyBudget(){
+
+    }
 
     public DailyBudget(LocalDate date, double budget) {
         this.date = date;
@@ -42,7 +46,7 @@ public class DailyBudget {
         return listExpenses.get(index);
     }
 
-    public void addExpense(Expenses expenses, Trips trip){
+    public void addExpense(Expenses expenses, Trip trip){
         this.listExpenses.add(expenses);
     }
 

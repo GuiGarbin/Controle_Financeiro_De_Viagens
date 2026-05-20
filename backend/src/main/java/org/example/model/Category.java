@@ -1,6 +1,6 @@
 package org.example.model;
 
-public class Category extends BaseEntity { 
+public class Category extends BaseEntity {
     private String name;
     private String icon;
     private String color;

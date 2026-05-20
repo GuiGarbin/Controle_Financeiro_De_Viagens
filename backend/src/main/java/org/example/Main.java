@@ -1,8 +1,6 @@
 package org.example;
 
 import org.example.trip.TripController;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 //@SpringBootApplication
 public class Main {
@@ -10,6 +8,7 @@ public class Main {
         //SpringApplication.run(Main.class, args);
         TripController trip = new TripController();
         trip.TripController();
+
     }
 }
 

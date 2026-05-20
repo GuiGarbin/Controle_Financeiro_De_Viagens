@@ -1,18 +1,19 @@
 package org.example.trip.expenses;
 
-import org.example.trip.Trips;
+import org.example.trip.Trip;
 import org.example.trip.daily.DailyBudget;
+import org.example.dto.request.response.ApiResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExpensesController {
-    Trips trips;
+    Trip trip;
     List<DailyBudget> dailyBudgetList = new ArrayList<>();
 
-    public ExpensesController(Trips trips) {
-        this.trips = trips;
-        this.dailyBudgetList = trips.getDailyBudgetList();
+    public ExpensesController(Trip trip) {
+        this.trip = trip;
+        this.dailyBudgetList = trip.getDailyBudgetList();
     }
 
 }

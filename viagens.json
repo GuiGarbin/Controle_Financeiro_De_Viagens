@@ -1,0 +1,48 @@
+[ {
+  "id" : null,
+  "createdAt" : null,
+  "updatedAt" : null,
+  "name" : "japao",
+  "description" : "nada",
+  "destination" : "japao",
+  "currency" : "yen",
+  "status" : true,
+  "dailyBudgetList" : [ {
+    "date" : "2026-04-20",
+    "budget" : 12744.0,
+    "listExpenses" : [ ]
+  }, {
+    "date" : "2026-04-21",
+    "budget" : 12744.0,
+    "listExpenses" : [ ]
+  }, {
+    "date" : "2026-04-22",
+    "budget" : 12744.0,
+    "listExpenses" : [ ]
+  }, {
+    "date" : "2026-04-23",
+    "budget" : 12744.0,
+    "listExpenses" : [ ]
+  }, {
+    "date" : "2026-04-24",
+    "budget" : 12744.0,
+    "listExpenses" : [ ]
+  } ],
+  "listTuristic" : [ {
+    "cost" : 135.0,
+    "name" : "tah mahal"
+  } ],
+  "createdBy" : {
+    "id" : null,
+    "createdAt" : null,
+    "updatedAt" : null,
+    "fullName" : "gui",
+    "birthDate" : null,
+    "email" : null,
+    "password" : null,
+    "userId" : null
+  },
+  "initialBudget" : 63720.0,
+  "currencyValue" : 31.86,
+  "budgetReal" : 2000.0
+} ]

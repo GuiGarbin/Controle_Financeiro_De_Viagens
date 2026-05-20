@@ -1,7 +1,7 @@
 package org.example.dto.request;
 
-import org.example.model.Expense; // importa a classe Expense para usar a classe interna Split
-import org.example.model.enums.SplitMethod; // importa a enum SplitMethod para usar no campo splitMethod  
+import org.example.model.Expense; // importa a classe  para usar a classe interna Split
+import org.example.model.enums.SplitMethod; // importa a enum SplitMethod para usar no campo splitMethod
 import java.util.List; // importa a classe List para usar no campo splits
 
 public class CreateExpenseRequest { 

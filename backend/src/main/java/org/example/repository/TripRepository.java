@@ -2,7 +2,7 @@ package org.example.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference; // Importação necessária para usar TypeReference com generics
 import com.fasterxml.jackson.databind.ObjectMapper; // biblioteca para converter entre objetos Java e JSON
-import org.example.model.Trip; // Importação do modelo Trip, que é a entidade que este repositório irá gerenciar
+import org.example.trip.Trip; // Importação do modelo Trip, que é a entidade que este repositório irá gerenciar
 
 import java.nio.file.Path; // para manipulação de arquivos (Paths, Files, StandardCopyOption)
 import java.util.List; // para trabalhar com listas de objetos
@@ -13,10 +13,10 @@ public class TripRepository extends JsonRepository<Trip> {
         super(filePath, objectMapper, new TypeReference<List<Trip>>() {});
     }
 
-    // Método para buscar todas as viagens em que um usuário específico é membro
-    public List<Trip> findByMemberId(String userId) {
-        return findAll().stream()
-                .filter(t -> t.getMemberIds().contains(userId))
-                .toList();
-    }
+//    // Método para buscar todas as viagens em que um usuário específico é membro
+//    public List<Trip> findByMemberId(String userId) {
+//        return findAll().stream()
+//                .filter(t -> t.getMemberIds().contains(userId))
+//                .toList();
+//    }
 }

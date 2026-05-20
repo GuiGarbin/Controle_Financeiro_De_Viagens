@@ -1,23 +1,45 @@
 package org.example.trip;
 
-import org.example.trip.daily.DailyBudget;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.repository.TripRepository;
 import org.example.trip.expenses.Expenses;
-import org.example.trip.expenses.ExpensesController;
 import org.example.trip.expenses.TuristicPoint;
 import org.example.users.User;
+import org.example.repository.JsonRepository;
+import org.example.dto.request.response.ApiResponse;
 
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class TripController {
-    public List<Trips> tripsList = new ArrayList<>();
-    Trips trip;
+    public List<Trip> tripList = new ArrayList<>();
+    Trip trip;
+    TripRepository jsonRepository;
 
     public void TripController(){
         criarDadosFalsos();
-        testeDeSaida();
+        //testeDeSaida();
+        configJson();
+        //testeJson();
+    }
+
+    private void configJson(){
+        Path path = Path.of("viagens.json");
+        ObjectMapper motor = new ObjectMapper();
+        motor.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+        motor.disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        jsonRepository = new TripRepository(path, motor);
+    }
+
+    private void testeJson(){
+        jsonRepository.save(trip);
+
+        List<Trip> tripsjson = jsonRepository.findAll();
+        System.out.println(tripsjson.getFirst().getBudgetReal());
     }
 
     //classe teste para se a saida esta como deveria
@@ -58,13 +80,13 @@ public class TripController {
     }
 
     private void addExpensive(Expenses expenses){
-        Trips trips = tripsList.getFirst();
-        trips.verifyDay(0).addExpense(expenses, trips);
+        Trip trip = tripList.getFirst();
+        trip.verifyDay(0).addExpense(expenses, trip);
     }
 
     //classe para criar dados falsos para testes
     private void criarDadosFalsos(){
-        Trips trips = new Trips(
+        Trip trip = new Trip(
                 "japao",
                 2000,
                 "nada",
@@ -76,10 +98,10 @@ public class TripController {
         );
 
         TuristicPoint turisticPoint = new TuristicPoint(135, "tah mahal");
-        trips.addTuristicPoint(turisticPoint);
+        trip.addTuristicPoint(turisticPoint);
 
-        tripsList.add(trips);
-        trip = tripsList.get(0);
+        tripList.add(trip);
+        this.trip = tripList.get(0);
     }
 
     private void menu(){

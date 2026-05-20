@@ -1,4 +1,4 @@
-package org.example.dto.response;
+package org.example.dto.request.response;
 
 import java.time.Instant;
 
