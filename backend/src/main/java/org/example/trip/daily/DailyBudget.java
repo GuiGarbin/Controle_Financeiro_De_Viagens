@@ -1,6 +1,5 @@
 package org.example.trip.daily;
 
-import org.example.trip.Trip;
 import org.example.trip.expenses.Expenses;
 
 import java.time.LocalDate;
@@ -11,6 +10,7 @@ public class DailyBudget {
     private LocalDate date;
     private double budget;
     private List<Expenses> listExpenses;
+    private boolean closed;
 
     public DailyBudget(){
 
@@ -30,7 +30,7 @@ public class DailyBudget {
         return total;
     }
 
-    public double verifyBudget(){
+    public double verifyBudgetRemaining(){
         double remain = this.budget;
         for(Expenses expenses : listExpenses){
             remain -= expenses.getAmount();
@@ -39,14 +39,14 @@ public class DailyBudget {
     }
 
     public double verifyBudgetReal(double currency){
-        return verifyBudget() * ( 1 / currency);
+        return verifyBudgetRemaining() * ( 1 / currency);
     }
 
     public Expenses getExpense(int index){
         return listExpenses.get(index);
     }
 
-    public void addExpense(Expenses expenses, Trip trip){
+    public void addExpense(Expenses expenses){
         this.listExpenses.add(expenses);
     }
 
@@ -76,5 +76,13 @@ public class DailyBudget {
 
     public void setListExpenses(List<Expenses> listExpenses) {
         this.listExpenses = listExpenses;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 }

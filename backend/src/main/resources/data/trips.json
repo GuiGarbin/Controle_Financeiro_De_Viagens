@@ -1,0 +1,61 @@
+[ {
+  "id" : "trp_ff6f421e",
+  "createdAt" : "hoje",
+  "updatedAt" : "hoje",
+  "name" : "japao",
+  "description" : "nada",
+  "destination" : "japao",
+  "currency" : "yen",
+  "status" : true,
+  "dailyBudgetList" : [ {
+    "date" : "2026-05-18",
+    "budget" : 21240.0,
+    "listExpenses" : [ ]
+  }, {
+    "date" : "2026-05-19",
+    "budget" : 21240.0,
+    "listExpenses" : [ {
+      "id" : "0",
+      "tripId" : "trp_ff6f421e",
+      "description" : "gasto teste",
+      "amount" : 300.0,
+      "currencyValue" : 31.86,
+      "currency" : "yen",
+      "date" : "2026-05-20T01:24:57.170+00:00",
+      "notes" : "nada",
+      "createdAt" : "2026-05-20T01:24:57.170+00:00"
+    }, {
+      "id" : "0",
+      "tripId" : "trp_ff6f421e",
+      "description" : "gasto teste",
+      "amount" : 300.0,
+      "currencyValue" : 31.86,
+      "currency" : "yen",
+      "date" : "2026-05-20T01:25:05.040+00:00",
+      "notes" : "nada",
+      "createdAt" : "2026-05-20T01:25:05.040+00:00"
+    }, {
+      "id" : "exp_da2521d5",
+      "tripId" : "trp_ff6f421e",
+      "description" : "gasto teste",
+      "amount" : 300.0,
+      "currencyValue" : 31.86,
+      "currency" : "yen",
+      "date" : "2026-05-20T01:26:18.147+00:00",
+      "notes" : "nada",
+      "createdAt" : "2026-05-20T01:26:18.147+00:00"
+    } ]
+  }, {
+    "date" : "2026-05-20",
+    "budget" : 21240.0,
+    "listExpenses" : [ ]
+  } ],
+  "listTuristic" : [ {
+    "cost" : 135.0,
+    "name" : "tah mahal"
+  } ],
+  "createdBy" : {
+    "fullName" : "gui"
+  },
+  "initialBudget" : 63720.0
+} ]

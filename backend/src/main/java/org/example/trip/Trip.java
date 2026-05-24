@@ -24,6 +24,7 @@ public class Trip extends BaseEntity {
     private LocalDate startDate;
     private LocalDate endDate;
     private User createdBy;
+    private double rest;
 
     public Trip(){
 
@@ -65,6 +66,16 @@ public class Trip extends BaseEntity {
             remain -= dailyBudget.totalExpense();
         }
         return remain;
+    }
+
+    public double verifyBalance(){
+        for(DailyBudget d : dailyBudgetList){
+            if(d.getDate().isBefore(LocalDate.now())&&!d.isClosed()){
+                rest += d.verifyBudgetRemaining();
+                d.setClosed(true);
+            }
+        }
+        return rest;
     }
 
     public double verifyRemainBudgetTripReal(){
@@ -179,5 +190,13 @@ public class Trip extends BaseEntity {
 
     public void setDailyBudgetList(List<DailyBudget> dailyBudgetList) {
         this.dailyBudgetList = dailyBudgetList;
+    }
+
+    public double getRest() {
+        return rest;
+    }
+
+    public void setRest(double rest) {
+        this.rest = rest;
     }
 }

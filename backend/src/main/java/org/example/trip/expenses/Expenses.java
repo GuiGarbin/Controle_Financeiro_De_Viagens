@@ -1,9 +1,12 @@
 package org.example.trip.expenses;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.example.util.IdGenerator;
+
 import java.util.Date;
 
 public class Expenses {
-    private int id;
+    private String id;
     private String tripId;
     private String description;
     private double amount;
@@ -14,12 +17,17 @@ public class Expenses {
     private Date createdAt;
     ExpensesController controller;
 
+    public Expenses(){
+
+    }
+
     public Expenses(String tripId,
                     String description,
                     double amount,
                     double currencyValue,
                     String currency,
                     String notes) {
+        this.id = IdGenerator.forExpense();
         this.tripId = tripId;
         this.description = description;
         this.amount = amount;
@@ -30,15 +38,16 @@ public class Expenses {
         this.createdAt = new Date();
     }
 
+    @JsonIgnore
     public double getConvertedAmount(){
         return this.amount * (1/currencyValue);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -98,6 +107,7 @@ public class Expenses {
         this.createdAt = createdAt;
     }
 
+    @JsonIgnore
     public double getConvertedValue(){
         return this.amount*this.currencyValue;
     }

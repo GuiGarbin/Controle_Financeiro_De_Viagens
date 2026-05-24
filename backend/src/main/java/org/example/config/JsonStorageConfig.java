@@ -3,6 +3,7 @@ package org.example.config;
 import com.fasterxml.jackson.annotation.JsonInclude; // para ignorar campos null no JSON
 import com.fasterxml.jackson.databind.ObjectMapper; // classe principal do Jackson para conversão Java <-> JSON
 import com.fasterxml.jackson.databind.SerializationFeature; // para configurar o formato do JSON (ex: indentado)
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.example.model.*; //
 import org.example.repository.*; // importa as classes de repositório (UserRepository, TripRepository, etc.)
 import org.springframework.context.annotation.Bean; // para registrar beans no contexto do Spring
@@ -15,14 +16,16 @@ import java.nio.file.Paths; // para criar objetos Path a partir de strings de ca
 public class JsonStorageConfig {
 
     // Pasta onde ficam os arquivos JSON
-    private static final Path DATA_DIR = Paths.get("src/main/resources/data");
+    private static final Path DATA_DIR = Paths.get("backend/src/main/resources/data");
 
     // Configura o Jackson (conversor Java <-> JSON)
-    @Bean // Indica que este método retorna um bean gerenciado pelo Spring, que pode ser injetado em outros lugares
+    @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);       // JSON formatado e legível
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL); // ignora campos null
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return mapper;
     }
 
