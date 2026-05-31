@@ -17,7 +17,8 @@ public class User extends BaseEntity {
     }
 
     public User(String fullName, LocalDate birthDate){
-
+        this.fullName = fullName;
+        this.birthDate = birthDate;
     }
 
     public User(String fullName) {
