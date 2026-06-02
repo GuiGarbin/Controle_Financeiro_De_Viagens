@@ -1,8 +1,12 @@
-package org.example.trip.expenses;
+package org.example.expenses;
 
 public class TuristicPoint {
     private double cost;
     private String name;
+
+    public TuristicPoint(){
+
+    }
 
     public TuristicPoint(double cost, String name) {
         this.cost = cost;

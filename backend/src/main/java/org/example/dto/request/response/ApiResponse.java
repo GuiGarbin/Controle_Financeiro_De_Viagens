@@ -1,0 +1,35 @@
+package org.example.dto.request.response;
+
+import java.time.Instant;
+
+public class ApiResponse<T> { // DTO genérico para respostas de API, com status, mensagem, dados e timestamp
+    private boolean success;
+    private String message;
+    private T data;
+    private String timestamp;
+
+    // Construtor de sucesso
+    public static <T> ApiResponse<T> success(T data) {
+        ApiResponse<T> r = new ApiResponse<>();
+        r.success = true;
+        r.message = "OK";
+        r.data = data;
+        r.timestamp = Instant.now().toString();
+        return r;
+    }
+
+    // Construtor de erro
+    public static <T> ApiResponse<T> error(String message) {
+        ApiResponse<T> r = new ApiResponse<>();
+        r.success = false;
+        r.message = message;
+        r.data = null;
+        r.timestamp = Instant.now().toString();
+        return r;
+    }
+
+    public boolean isSuccess() { return success; }
+    public String getMessage() { return message; }
+    public T getData() { return data; }
+    public String getTimestamp() { return timestamp; }
+}

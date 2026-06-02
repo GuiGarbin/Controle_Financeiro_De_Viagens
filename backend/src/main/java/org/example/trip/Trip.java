@@ -1,18 +1,18 @@
 package org.example.trip;
 
-import org.example.trip.daily.DailyBudget;
-import org.example.trip.expenses.Expenses;
-import org.example.trip.expenses.ExpensesController;
-import org.example.trip.expenses.TuristicPoint;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.example.model.BaseEntity;
+import org.example.daily.DailyBudget;
+import org.example.expenses.TuristicPoint;
 import org.example.users.User;
+import org.example.util.IdGenerator;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Trips {
-    private int id=0;
+public class Trip extends BaseEntity {
     private String name;
     private double budget;
     private String description;
@@ -24,17 +24,20 @@ public class Trips {
     private LocalDate startDate;
     private LocalDate endDate;
     private User createdBy;
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private double rest;
 
-    public Trips(String name,
-                 double budget,
-                 String description,
-                 String destination,
-                 String currency,
-                 LocalDate startDate, LocalDate endDate,
-                 User createdBy) {
-        this.id = this.id++;
+    public Trip(){
+
+    }
+
+    public Trip(String name,
+                double budget,
+                String description,
+                String destination,
+                String currency,
+                LocalDate startDate, LocalDate endDate,
+                User createdBy) {
+        this.id = IdGenerator.forTrip();
         this.name = name;
         this.description = description;
         this.destination = destination;
@@ -44,8 +47,8 @@ public class Trips {
         this.startDate = startDate;
         this.endDate = endDate;
         this.createdBy = createdBy;
-        this.createdAt = LocalDate.now();
-        this.updatedAt = LocalDate.now();
+        this.createdAt = "hoje";
+        this.updatedAt = "hoje";
         createDays();
     }
 
@@ -65,10 +68,21 @@ public class Trips {
         return remain;
     }
 
+    public double verifyBalance(){
+        for(DailyBudget d : dailyBudgetList){
+            if(d.getDate().isBefore(LocalDate.now())&&!d.isClosed()){
+                rest += d.verifyBudgetRemaining();
+                d.setClosed(true);
+            }
+        }
+        return rest;
+    }
+
     public double verifyRemainBudgetTripReal(){
         return verifyRemainBudgetTrip() * (1 / getCurrencyValue());
     }
 
+    @JsonIgnore
     public double getBudgetReal(){
         return budget * (1 / getCurrencyValue());
     }
@@ -81,11 +95,11 @@ public class Trips {
         return value*=getCurrencyValue();
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -113,6 +127,7 @@ public class Trips {
         this.destination = destination;
     }
 
+    @JsonIgnore
     public double getCurrencyValue() {
         if (currency.equalsIgnoreCase("yen")) return 31.86;
         else if (currency.equalsIgnoreCase("dolar")) return 0.20;
@@ -175,5 +190,37 @@ public class Trips {
 
     public void setDailyBudgetList(List<DailyBudget> dailyBudgetList) {
         this.dailyBudgetList = dailyBudgetList;
+    }
+
+    public double getRest() {
+        return rest;
+    }
+
+    public void setRest(double rest) {
+        this.rest = rest;
+    }
+
+    public double getBudget() {
+        return budget;
+    }
+
+    public void setBudget(double budget) {
+        this.budget = budget;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 }
