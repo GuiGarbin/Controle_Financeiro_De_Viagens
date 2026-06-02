@@ -2,12 +2,14 @@ package org.example.trip;
 
 import org.example.config.JsonStorageConfig;
 import org.example.repository.TripRepository;
-import org.example.trip.daily.DailyBudget;
-import org.example.trip.expenses.Expenses;
-import org.example.trip.expenses.TuristicPoint;
+import org.example.daily.DailyBudget;
+import org.example.expenses.Expenses;
+import org.example.expenses.TuristicPoint;
+import org.example.service.CurrencyService;
 import org.example.users.User;
-import org.springframework.cglib.core.Local;
+import org.springframework.core.io.AbstractResource;
 
+import java.net.http.HttpClient;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,8 @@ public class TripController {
     Trip tripTest;
     TripRepository tripRepository;
     User user;
+    HttpClient clienteWeb = HttpClient.newHttpClient();
+    CurrencyService cambioApi = new CurrencyService();
 
     public void TripController(){
         //criarDadosFalsos();
@@ -58,48 +62,72 @@ public class TripController {
                 case 2: createTrip(scanner); break;
                 case 3: showCurrentTrip(scanner); break;
                 case 0: on = false; break;
-
             }
         }
     }
 
     private void showCurrentTrip(Scanner scanner){
+        scanner.nextLine();
         tripList = tripRepository.findAll();
         Trip currentTrip = null;
         for(Trip trip : tripList){
             if(trip.isStatus()){
                 currentTrip = trip;
                 break;
-            } else {
-                System.out.println("Nenhuma viagem em andamento encontrada");
-                break;
             }
         }
+        if(currentTrip==null){
+            System.out.println("Nenhuma viagem em andamento");
+            return;
+        }
+        List<DailyBudget> listDays = currentTrip.getDailyBudgetList();
+        DailyBudget dayTripToday = null;
+        for(DailyBudget d : listDays){
+            if(d.getDate().equals(LocalDate.now())){
+                dayTripToday = d;
+            }
+        }
+        if (dayTripToday==null){
+            System.out.println("Erro ao abrir dias da viagem");
+            return;
+        }
+
         System.out.println("Viagem " + currentTrip.getName());
-        System.out.println("Orcamento " + currentTrip.getBudget());
+        System.out.println("Orcamento restante total: " + String.format("%.2f", currentTrip.verifyRemainBudgetTrip()));
+        System.out.println("Orcamento restante de hoje: " + String.format("%.2f", dayTripToday.verifyBudgetRemaining()));
         System.out.println("==================");
         System.out.println("Adicionar gasto (Pressione 1)");
+        System.out.println("Abrir lista de gastos (Pressione 2)");
         int opcao = scanner.nextInt();
 
-        if(opcao==1){
-            addExpensiveToTrip(scanner, currentTrip);
+        switch (opcao){
+            case 1:addExpensiveToTrip(scanner, currentTrip); break;
+            case 2:showExpensesDay(dayTripToday);break;
+        }
+    }
+
+    private void showExpensesDay(DailyBudget dailyBudget){
+        List<Expenses> listExpenses = dailyBudget.getListExpenses();
+        for(Expenses e : listExpenses){
+            System.out.println(e.getDescription() + " " + e.getAmount());
+            System.out.println("valor convertido pra Real: " + String.format("%.2f", e.getConvertedAmount()));
         }
     }
 
     private void addExpensiveToTrip(Scanner scanner, Trip trip){
+        scanner.nextLine();
         System.out.println("Item");
         String description = scanner.nextLine();
         System.out.println("Valor do gasto");
         double amount = scanner.nextDouble();
-        System.out.println("Cambio atual");
-        double currentCurrency = scanner.nextDouble();
+        double currentCurrency = cambioApi.getRate(trip.getCurrency(), "BRL");
         Expenses expenses = new Expenses(trip.getId(), description, amount, currentCurrency, trip.getCurrency(), "");
         LocalDate today = LocalDate.now();
         for(DailyBudget d : trip.getDailyBudgetList()){
             if(d.getDate().equals(today)){
                 System.out.println("achou");
                 d.addExpense(expenses);
-                if(d.getBudget()>=d.verifyBudgetRemaining()){
+                if(d.verifyBudgetRemaining() < 0){
                     System.out.println("Voce passou do orcamento diario");
                 } else if(d.verifyBudgetRemaining()>=(d.getBudget()*0.9) && d.verifyBudgetRemaining()<d.getBudget()){
                     System.out.println("Voce esta chegando perto do limite diario");
@@ -136,7 +164,7 @@ public class TripController {
         trip.setEndDate(trip.getDailyBudgetList().getLast().getDate());
         System.out.println("Viagem " + trip.getName());
         System.out.println("Orcamento: " + trip.getBudgetReal());
-        if(trip.getStartDate().isAfter(LocalDate.now()) && trip.getEndDate().isBefore(LocalDate.now())) {
+        if(trip.getStartDate().isBefore(LocalDate.now()) && trip.getEndDate().isAfter(LocalDate.now())) {
             System.out.println("Viagem em andamento");
         } else if(trip.getStartDate().isAfter(LocalDate.now()) && trip.isStatus()){
             System.out.println("Proxima viagem planejada");
@@ -153,6 +181,7 @@ public class TripController {
         String name = scanner.nextLine();
         System.out.println("Orcamento da viagem:");
         double budget = scanner.nextDouble();
+        scanner.nextLine();
         System.out.println("Qual o objetivo da viagem?");
         String description = scanner.nextLine();
         System.out.println("Pra onde a viagem sera?");
@@ -177,6 +206,12 @@ public class TripController {
                 user
         );
 
+        for(Trip trip : tripList){
+            if(trip.isStatus()){
+                trip.setStatus(false);
+                tripRepository.save(trip);
+            }
+        }
         tripRepository.save(trip1);
         System.out.println("Viagem criada com sucesso!");
     }

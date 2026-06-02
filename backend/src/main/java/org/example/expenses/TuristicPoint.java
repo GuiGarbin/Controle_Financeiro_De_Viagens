@@ -1,4 +1,4 @@
-package org.example.trip.expenses;
+package org.example.expenses;
 
 public class TuristicPoint {
     private double cost;

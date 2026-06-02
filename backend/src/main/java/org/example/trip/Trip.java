@@ -2,8 +2,8 @@ package org.example.trip;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.example.model.BaseEntity;
-import org.example.trip.daily.DailyBudget;
-import org.example.trip.expenses.TuristicPoint;
+import org.example.daily.DailyBudget;
+import org.example.expenses.TuristicPoint;
 import org.example.users.User;
 import org.example.util.IdGenerator;
 

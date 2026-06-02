@@ -1,8 +1,7 @@
-package org.example.trip.expenses;
+package org.example.expenses;
 
 import org.example.trip.Trip;
-import org.example.trip.daily.DailyBudget;
-import org.example.dto.request.response.ApiResponse;
+import org.example.daily.DailyBudget;
 
 import java.util.ArrayList;
 import java.util.List;

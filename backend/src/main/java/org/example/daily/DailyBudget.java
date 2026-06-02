@@ -1,6 +1,6 @@
-package org.example.trip.daily;
+package org.example.daily;
 
-import org.example.trip.expenses.Expenses;
+import org.example.expenses.Expenses;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

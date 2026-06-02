@@ -1,4 +1,4 @@
-package org.example.trip.expenses;
+package org.example.expenses;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.example.util.IdGenerator;
@@ -40,7 +40,7 @@ public class Expenses {
 
     @JsonIgnore
     public double getConvertedAmount(){
-        return this.amount * (1/currencyValue);
+        return this.amount * currencyValue;
     }
 
     public String getId() {

@@ -3,14 +3,16 @@
   "createdAt" : "hoje",
   "updatedAt" : "hoje",
   "name" : "japao",
+  "budget" : 63720.0,
   "description" : "nada",
   "destination" : "japao",
-  "currency" : "yen",
-  "status" : true,
+  "currency" : "JPY",
+  "status" : false,
   "dailyBudgetList" : [ {
     "date" : "2026-05-18",
     "budget" : 21240.0,
-    "listExpenses" : [ ]
+    "listExpenses" : [ ],
+    "closed" : false
   }, {
     "date" : "2026-05-19",
     "budget" : 21240.0,
@@ -44,11 +46,13 @@
       "date" : "2026-05-20T01:26:18.147+00:00",
       "notes" : "nada",
       "createdAt" : "2026-05-20T01:26:18.147+00:00"
-    } ]
+    } ],
+    "closed" : false
   }, {
     "date" : "2026-05-20",
     "budget" : 21240.0,
-    "listExpenses" : [ ]
+    "listExpenses" : [ ],
+    "closed" : false
   } ],
   "listTuristic" : [ {
     "cost" : 135.0,
@@ -57,5 +61,106 @@
   "createdBy" : {
     "fullName" : "gui"
   },
+  "rest" : 0.0,
+  "initialBudget" : 63720.0
+}, {
+  "id" : "trp_9bd61ca7",
+  "createdAt" : "hoje",
+  "updatedAt" : "hoje",
+  "name" : "trabalho",
+  "budget" : 63720.0,
+  "description" : "trabalhar",
+  "destination" : "japao",
+  "currency" : "JPY",
+  "status" : true,
+  "dailyBudgetList" : [ {
+    "date" : "2026-05-30",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-05-31",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-01",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-02",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ {
+      "id" : "exp_2ad8cb1d",
+      "tripId" : "trp_9bd61ca7",
+      "description" : "bola",
+      "amount" : 200.0,
+      "currencyValue" : 0.03133,
+      "currency" : "JPY",
+      "date" : "2026-06-02T23:29:46.774+00:00",
+      "notes" : "",
+      "createdAt" : "2026-06-02T23:29:46.774+00:00"
+    } ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-03",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-04",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-05",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-06",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-07",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-08",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-09",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-10",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-11",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  }, {
+    "date" : "2026-06-12",
+    "budget" : 4551.428571428572,
+    "listExpenses" : [ ],
+    "closed" : false
+  } ],
+  "listTuristic" : [ ],
+  "startDate" : "2026-05-30",
+  "endDate" : "2026-06-12",
+  "createdBy" : {
+    "fullName" : "Guilherme",
+    "birthDate" : "2026-05-31"
+  },
+  "rest" : 0.0,
   "initialBudget" : 63720.0
 } ]
