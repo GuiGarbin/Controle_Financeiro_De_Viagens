@@ -18,6 +18,7 @@ public class Trip extends BaseEntity {
     private String description;
     private String destination;
     private String currency;
+    private double currencyValue;
     private boolean status;
     private List<DailyBudget> dailyBudgetList = new ArrayList<>();
     private List<TuristicPoint> listTuristic = new ArrayList<>();
@@ -35,6 +36,7 @@ public class Trip extends BaseEntity {
                 String description,
                 String destination,
                 String currency,
+                double currencyValue,
                 LocalDate startDate, LocalDate endDate,
                 User createdBy) {
         this.id = IdGenerator.forTrip();
@@ -42,7 +44,8 @@ public class Trip extends BaseEntity {
         this.description = description;
         this.destination = destination;
         this.currency = currency;
-        this.budget = budget*getCurrencyValue();
+        this.currencyValue = currencyValue;
+        this.budget = budget*currencyValue;
         this.status = true;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -84,7 +87,7 @@ public class Trip extends BaseEntity {
 
     @JsonIgnore
     public double getBudgetReal(){
-        return budget * (1 / getCurrencyValue());
+        return this.budget * getCurrencyValue();
     }
 
     public DailyBudget verifyDay(int day){
@@ -127,12 +130,12 @@ public class Trip extends BaseEntity {
         this.destination = destination;
     }
 
-    @JsonIgnore
     public double getCurrencyValue() {
-        if (currency.equalsIgnoreCase("yen")) return 31.86;
-        else if (currency.equalsIgnoreCase("dolar")) return 0.20;
-        else if (currency.equalsIgnoreCase("euro")) return 0.17;
-        else return 0;
+        return this.currencyValue;
+    }
+
+    public void setCurrencyValue(double currencyValue){
+        this.currencyValue = currencyValue;
     }
 
     public String getCurrency(){

@@ -98,11 +98,13 @@ public class TripController {
         System.out.println("==================");
         System.out.println("Adicionar gasto (Pressione 1)");
         System.out.println("Abrir lista de gastos (Pressione 2)");
+        System.out.println("Voltar (Pressione 0)");
         int opcao = scanner.nextInt();
 
         switch (opcao){
             case 1:addExpensiveToTrip(scanner, currentTrip); break;
             case 2:showExpensesDay(dayTripToday);break;
+            case 0: break;
         }
     }
 
@@ -141,21 +143,17 @@ public class TripController {
         scanner.nextLine();
         System.out.println("Lista de viagens:");
         tripList = tripRepository.findAll();
-        for(Trip t : tripList){
-            System.out.println("Viagem " + t.getName() + " " + t.getId());
+        for(int i=0;i<tripList.size();i++){
+            Trip t = tripList.get(i);
+            System.out.println( (i+1) + ". Viagem " + t.getName() + " " + t.getId());
         }
         System.out.println("Gostaria de selecionar alguma viagem?");
-        System.out.println("Se sim digite o id, caso nao digite '0'");
-        String opcao = scanner.nextLine();
-        if(opcao.equals("0")){
+        System.out.println("Se sim digite o numero referente a viagem, caso nao digite '0'");
+        int opcao = scanner.nextInt();
+        if(opcao==0){
             return;
         } else {
-            for (Trip t : tripList){
-                if(t.getId().equals(opcao)){
-                    detailsTrip(t);
-                    break;
-                }
-            }
+            detailsTrip(tripList.get(opcao-1));
         }
     }
 
@@ -163,7 +161,7 @@ public class TripController {
         trip.setStartDate(trip.getDailyBudgetList().getFirst().getDate());
         trip.setEndDate(trip.getDailyBudgetList().getLast().getDate());
         System.out.println("Viagem " + trip.getName());
-        System.out.println("Orcamento: " + trip.getBudgetReal());
+        System.out.println("Orcamento em real: " + String.format("%.2f",trip.getBudgetReal()));
         if(trip.getStartDate().isBefore(LocalDate.now()) && trip.getEndDate().isAfter(LocalDate.now())) {
             System.out.println("Viagem em andamento");
         } else if(trip.getStartDate().isAfter(LocalDate.now()) && trip.isStatus()){
@@ -194,6 +192,7 @@ public class TripController {
         System.out.println("Data final");
         String finalDateString = scanner.nextLine();
         LocalDate finalDate = LocalDate.parse(finalDateString);
+        double valueCurrency = cambioApi.getRate(currency, "BRL");
 
         Trip trip1 = new Trip(
                 name,
@@ -201,6 +200,7 @@ public class TripController {
                 description,
                 country,
                 currency,
+                valueCurrency,
                 startDate,
                 finalDate,
                 user
@@ -261,6 +261,7 @@ public class TripController {
                 "nada",
                 "japao",
                 "yen",
+                0.3,
                 LocalDate.parse("2026-05-18"),
                 LocalDate.parse("2026-05-20"),
                 new User("gui")
