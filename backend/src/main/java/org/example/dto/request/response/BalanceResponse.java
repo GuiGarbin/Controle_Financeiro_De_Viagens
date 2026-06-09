@@ -1,4 +1,4 @@
-package org.example.dto.response;
+package org.example.dto.request.response;
 
 public class BalanceResponse { // DTO para mostrar o saldo líquido de um usuário em uma viagem, indicando se ele tem a receber ou deve pagar
     private String userId;

@@ -7,6 +7,7 @@ import org.example.trip.TripController;
 import org.example.users.User;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -72,12 +73,13 @@ public class Menu {
         String country = scanner.nextLine();
         System.out.println("Cambio da moeda");
         String currency = scanner.nextLine();
-        System.out.println("Data de inicio");
+        DateTimeFormatter molde = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        System.out.println("Data de inicio (dd/mm/aaaa):");
         String startDateString = scanner.nextLine();
-        LocalDate startDate = LocalDate.parse(startDateString);
-        System.out.println("Data final");
+        LocalDate startDate = LocalDate.parse(startDateString, molde);
+        System.out.println("Data final (dd/mm/aaaa):");
         String finalDateString = scanner.nextLine();
-        LocalDate finalDate = LocalDate.parse(finalDateString);
+        LocalDate finalDate = LocalDate.parse(finalDateString, molde);
         tripController.createTrip(name, budget, description, country, currency, startDate, finalDate);
     }
 
