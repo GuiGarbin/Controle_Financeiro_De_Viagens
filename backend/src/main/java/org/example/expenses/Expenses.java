@@ -15,7 +15,6 @@ public class Expenses {
     private Date date;
     private String notes;
     private Date createdAt;
-    ExpensesController controller;
 
     public Expenses(){
 
