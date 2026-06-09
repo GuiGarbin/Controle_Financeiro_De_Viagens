@@ -43,6 +43,7 @@ public class Menu {
         while (on){
             Scanner scanner = new Scanner(System.in);
 
+            System.out.println("===============================");
             System.out.println("O que gostaria de fazer?");
             System.out.println("Verificar lista de viagens (Pressione 1)");
             System.out.println("Criar viagem (Pressione 2)");
@@ -62,6 +63,7 @@ public class Menu {
 
     private void createTrip(Scanner scanner){
         scanner.nextLine();
+        System.out.println("===============================");
         System.out.println("Titulo da viagem:");
         String name = scanner.nextLine();
         System.out.println("Orcamento da viagem:");
@@ -109,6 +111,7 @@ public class Menu {
             return;
         }
 
+        System.out.println("===============================");
         System.out.println("Viagem " + currentTrip.getName());
         System.out.println("Orcamento restante total: " + String.format("%.2f", currentTrip.verifyRemainBudgetTrip()));
         System.out.println("Orcamento restante de hoje: " + String.format("%.2f", dayTripToday.verifyBudgetRemaining()));
@@ -119,10 +122,19 @@ public class Menu {
         int opcao = scanner.nextInt();
 
         switch (opcao){
-            case 1:tripController.addExpensiveToTrip(scanner, currentTrip); break;
+            case 1:addExpense(scanner, currentTrip); break;
             case 2:showExpensesDay(dayTripToday);break;
             case 0:menu(tripList);
         }
+    }
+
+    private void addExpense(Scanner scanner, Trip currentTrip){
+        scanner.nextLine();
+        System.out.println("Item");
+        String description = scanner.nextLine();
+        System.out.println("Valor do gasto");
+        double amount = scanner.nextDouble();
+        tripController.addExpensiveToTrip(currentTrip, description, amount);
     }
 
     private void showExpensesDay(DailyBudget dailyBudget){
