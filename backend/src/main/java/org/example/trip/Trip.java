@@ -45,7 +45,7 @@ public class Trip extends BaseEntity {
         this.destination = destination;
         this.currency = currency;
         this.currencyValue = currencyValue;
-        this.budget = budget*currencyValue;
+        this.budget = budget*(1/currencyValue);
         this.status = true;
         this.startDate = startDate;
         this.endDate = endDate;

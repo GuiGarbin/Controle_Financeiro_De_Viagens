@@ -1,4 +1,4 @@
-package org.example.dto.response;
+package org.example.dto.request.response;
 
 import org.example.model.Expense;
 import java.util.List;

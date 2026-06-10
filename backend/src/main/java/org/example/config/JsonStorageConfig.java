@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude; // para ignorar campos null
 import com.fasterxml.jackson.databind.ObjectMapper; // classe principal do Jackson para conversão Java <-> JSON
 import com.fasterxml.jackson.databind.SerializationFeature; // para configurar o formato do JSON (ex: indentado)
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.example.model.*; //
 import org.example.repository.*; // importa as classes de repositório (UserRepository, TripRepository, etc.)
 import org.springframework.context.annotation.Bean; // para registrar beans no contexto do Spring
@@ -11,6 +13,8 @@ import org.springframework.context.annotation.Configuration; // para marcar esta
 
 import java.nio.file.Path; // para representar caminhos de arquivos de forma segura e portátil
 import java.nio.file.Paths; // para criar objetos Path a partir de strings de caminho de arquivo
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Configuration // Indica que esta classe é uma classe de configuração do Spring, onde podemos definir beans e configurações
 public class JsonStorageConfig {
@@ -22,7 +26,11 @@ public class JsonStorageConfig {
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
+        DateTimeFormatter molde = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        JavaTimeModule newTime = new JavaTimeModule();
+        newTime.addSerializer(LocalDate.class, new LocalDateSerializer(molde));
+        newTime.addDeserializer(LocalDate.class, new LocalDateDeserializer(molde));
+        mapper.registerModule(newTime);
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

@@ -34,22 +34,16 @@ public class TripController {
     }
 
 
-    public void addExpensiveToTrip(Scanner scanner, Trip trip){
-        scanner.nextLine();
-        System.out.println("Item");
-        String description = scanner.nextLine();
-        System.out.println("Valor do gasto");
-        double amount = scanner.nextDouble();
+    public void addExpensiveToTrip(Trip trip, String description, double amount){
         double currentCurrency = cambioApi.getRate(trip.getCurrency(), "BRL");
         Expenses expenses = new Expenses(trip.getId(), description, amount, currentCurrency, trip.getCurrency(), "");
         LocalDate today = LocalDate.now();
         for(DailyBudget d : trip.getDailyBudgetList()){
             if(d.getDate().equals(today)){
-                System.out.println("achou");
                 d.addExpense(expenses);
                 if(d.verifyBudgetRemaining() < 0){
                     System.out.println("Voce passou do orcamento diario");
-                } else if(d.verifyBudgetRemaining()>=(d.getBudget()*0.9) && d.verifyBudgetRemaining()<d.getBudget()){
+                } else if(d.verifyBudgetRemaining() <= (d.getBudget() * 0.1) && d.verifyBudgetRemaining() >= 0){
                     System.out.println("Voce esta chegando perto do limite diario");
                 }
             }
