@@ -9,6 +9,7 @@ import org.example.users.User;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -23,9 +24,7 @@ public class Menu {
 
     public void mainScreen(){
         List<Trip> tripList = new ArrayList<>();
-        boolean on = true;
-        int opcao=-1;
-        while(on){
+        while(true){
             Scanner scanner = new Scanner(System.in);
             System.out.println("===============================");
             System.out.println("Bem vindo " + user.getFullName());
@@ -38,11 +37,9 @@ public class Menu {
     }
 
     private void menu(List<Trip> tripList){
-        boolean on = true;
         int opcao=-1;
-        while (on){
-            Scanner scanner = new Scanner(System.in);
-
+        Scanner scanner = new Scanner(System.in);
+        while (true){
             System.out.println("===============================");
             System.out.println("O que gostaria de fazer?");
             System.out.println("Verificar lista de viagens (Pressione 1)");
@@ -50,7 +47,7 @@ public class Menu {
             System.out.println("Verificar viagem atual (Pressione 3)");
             System.out.println("Sair (Pressione 0)");
 
-            opcao = scanner.nextInt();
+            opcao = readInt(scanner, "");
 
             switch (opcao){
                 case 1: showTrips(scanner, tripList); break;
@@ -62,18 +59,15 @@ public class Menu {
     }
 
     private void createTrip(Scanner scanner){
-        scanner.nextLine();
         System.out.println("===============================");
         System.out.println("Titulo da viagem:");
         String name = scanner.nextLine();
-        System.out.println("Orcamento da viagem:");
-        double budget = scanner.nextDouble();
-        scanner.nextLine();
+        double budget = readDoubles(scanner, "Orcamento da viagem em real:");
         System.out.println("Qual o objetivo da viagem?");
         String description = scanner.nextLine();
         System.out.println("Pra onde a viagem sera?");
         String country = scanner.nextLine();
-        System.out.println("Cambio da moeda");
+        System.out.println("Cambio da moeda (padrao global ISO 4217)");
         String currency = scanner.nextLine();
         DateTimeFormatter molde = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         System.out.println("Data de inicio (dd/mm/aaaa):");
@@ -113,13 +107,13 @@ public class Menu {
 
         System.out.println("===============================");
         System.out.println("Viagem " + currentTrip.getName());
-        System.out.println("Orcamento restante total: " + String.format("%.2f", currentTrip.verifyRemainBudgetTrip()));
-        System.out.println("Orcamento restante de hoje: " + String.format("%.2f", dayTripToday.verifyBudgetRemaining()));
+        System.out.println("Orcamento restante em moeda local total: " + String.format("%.2f", currentTrip.verifyRemainBudgetTrip()));
+        System.out.println("Orcamento restante de hoje em moeda local: " + String.format("%.2f", dayTripToday.verifyBudgetRemaining()));
         System.out.println("==================");
         System.out.println("Adicionar gasto (Pressione 1)");
         System.out.println("Abrir lista de gastos (Pressione 2)");
         System.out.println("Voltar ao menu (Pressione 0)");
-        int opcao = scanner.nextInt();
+        int opcao = readInt(scanner, "Selecione uma opcao");
 
         switch (opcao){
             case 1:addExpense(scanner, currentTrip); break;
@@ -129,11 +123,9 @@ public class Menu {
     }
 
     private void addExpense(Scanner scanner, Trip currentTrip){
-        scanner.nextLine();
         System.out.println("Item");
         String description = scanner.nextLine();
-        System.out.println("Valor do gasto");
-        double amount = scanner.nextDouble();
+        double amount = readDoubles(scanner, "Valor do gasto");
         tripController.addExpensiveToTrip(currentTrip, description, amount);
     }
 
@@ -146,7 +138,6 @@ public class Menu {
     }
 
     private void showTrips(Scanner scanner, List<Trip> tripList){
-        scanner.nextLine();
         System.out.println("Lista de viagens:");
         tripList = tripController.getTripList();
         for(int i=0;i<tripList.size();i++){
@@ -154,8 +145,7 @@ public class Menu {
             System.out.println( (i+1) + ". Viagem " + t.getName() + " " + t.getId());
         }
         System.out.println("Gostaria de selecionar alguma viagem?");
-        System.out.println("Se sim digite o numero referente a viagem, caso nao digite '0'");
-        int opcao = scanner.nextInt();
+        int opcao = readInt(scanner, "Se sim digite o numero referente a viagem, caso nao digite '0'");
         if(opcao==0){
             return;
         } else {
@@ -176,6 +166,30 @@ public class Menu {
             System.out.println("Viagem encerrada");
         } else if(trip.getStartDate().isAfter(LocalDate.now())&&!trip.isStatus()){
             System.out.println("Viagem salva");
+        }
+    }
+
+    private double readDoubles(Scanner scanner, String message){
+        while(true){
+            System.out.println(message);
+            String answer = scanner.nextLine();
+            try {
+                return Double.parseDouble(answer);
+            } catch (NumberFormatException e){
+                System.out.println("Erro: digite um numero valido");
+            }
+        }
+    }
+
+    private int readInt(Scanner scanner, String message){
+        while (true){
+            System.out.println(message);
+            String answer = scanner.nextLine();
+            try{
+                return Integer.parseInt(answer);
+            } catch (NumberFormatException e){
+                System.out.println("Erro: digite uma opcao valida");
+            }
         }
     }
 }
