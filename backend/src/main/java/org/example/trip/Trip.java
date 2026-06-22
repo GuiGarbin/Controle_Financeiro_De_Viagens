@@ -82,7 +82,7 @@ public class Trip extends BaseEntity {
     }
 
     public double verifyRemainBudgetTripReal(){
-        return verifyRemainBudgetTrip() * (1 / getCurrencyValue());
+        return verifyRemainBudgetTrip() * getCurrencyValue();
     }
 
     @JsonIgnore
