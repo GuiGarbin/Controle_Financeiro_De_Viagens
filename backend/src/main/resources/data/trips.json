@@ -8,7 +8,7 @@
   "destination" : "united",
   "currency" : "USD",
   "currencyValue" : 5.163,
-  "status" : true,
+  "status" : false,
   "dailyBudgetList" : [ {
     "date" : "07/06/2026",
     "budget" : 27.669405937854513,

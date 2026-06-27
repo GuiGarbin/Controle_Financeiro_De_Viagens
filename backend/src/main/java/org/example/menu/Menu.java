@@ -23,43 +23,47 @@ public class Menu {
     }
 
     public void mainScreen(){
-        List<Trip> tripList = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
         while(true){
-            Scanner scanner = new Scanner(System.in);
             System.out.println("===============================");
             System.out.println("Bem vindo " + user.getFullName());
+            System.out.println("===============================");
+            System.out.println(" ");
             if(tripController.hasTripOnGoing()){
-                showCurrentTrip(scanner, tripList);
-            } else {
-                menu(tripList);
+                showCurrentTrip(scanner);
+            } else if(tripController.getTripList().isEmpty()){
+                System.out.println("Nenhuma viagem no banco");
+                System.out.println("Criando viagem...");
+                createTrip(scanner);
+            }else {
+                menu(scanner);
             }
         }
     }
 
-    private void menu(List<Trip> tripList){
+    private void menu(Scanner scanner){
         int opcao=-1;
-        Scanner scanner = new Scanner(System.in);
         while (true){
-            System.out.println("===============================");
-            System.out.println("O que gostaria de fazer?");
+            System.out.println("---=====Menu=====---");
             System.out.println("Verificar lista de viagens (Pressione 1)");
             System.out.println("Criar viagem (Pressione 2)");
             System.out.println("Verificar viagem atual (Pressione 3)");
+            System.out.println(" ");
             System.out.println("Sair (Pressione 0)");
 
             opcao = readInt(scanner, "");
 
             switch (opcao){
-                case 1: showTrips(scanner, tripList); break;
+                case 1: showTrips(scanner); break;
                 case 2: createTrip(scanner); break;
-                case 3: showCurrentTrip(scanner, tripList); break;
+                case 3: showCurrentTrip(scanner); break;
                 case 0: System.exit(0); break;
             }
         }
     }
 
     private void createTrip(Scanner scanner){
-        System.out.println("===============================");
+        System.out.println("----======= Criacao de viagem =======----");
         System.out.println("Titulo da viagem:");
         String name = scanner.nextLine();
         double budget = readDoubles(scanner, "Orcamento da viagem em real:");
@@ -79,9 +83,9 @@ public class Menu {
         tripController.createTrip(name, budget, description, country, currency, startDate, finalDate);
     }
 
-    private void showCurrentTrip(Scanner scanner, List<Trip> tripList){
-        if(!tripController.hasTripOnGoing()) scanner.nextLine();
-        tripList = tripController.getTripList();
+    private void showCurrentTrip(Scanner scanner){
+        //if(!tripController.hasTripOnGoing()) scanner.nextLine();
+        List<Trip> tripList = tripController.getTripList();
         Trip currentTrip = null;
         for(Trip trip : tripList){
             if(trip.isStatus()){
@@ -112,14 +116,40 @@ public class Menu {
         System.out.println("==================");
         System.out.println("Adicionar gasto (Pressione 1)");
         System.out.println("Abrir lista de gastos (Pressione 2)");
+        System.out.println("Abrir detalhes da viagem (Pressione 3)");
         System.out.println("Voltar ao menu (Pressione 0)");
         int opcao = readInt(scanner, "Selecione uma opcao");
 
         switch (opcao){
             case 1:addExpense(scanner, currentTrip); break;
             case 2:showExpensesDay(dayTripToday);break;
-            case 0:menu(tripList);
+            case 3:showDetails(currentTrip);break;
+            case 0:return;
         }
+    }
+
+    private void showDetails(Trip currentTrip){
+        System.out.println("===============================");
+        System.out.println("Viagem " + currentTrip.getName());
+        System.out.println("Orcamento total em " + currentTrip.getCurrency() + ": " + String.format("%.2f", currentTrip.getBudget()));
+        System.out.println("Valor em real: " + currentTrip.getBudgetReal());
+
+        System.out.println("Orcamento restante em " + currentTrip.getCurrency() + ": " + String.format("%.2f", currentTrip.verifyRemainBudgetTrip()));
+        System.out.println("Valor em real: " + currentTrip.verifyRemainBudgetTripReal());
+
+        System.out.println(currentTrip.getDescription());
+        System.out.println("Viagem em: " + currentTrip.getDestination());
+
+        System.out.println("Dias da viagem: ");
+        for(DailyBudget d : currentTrip.getDailyBudgetList()){
+            System.out.println("Dia " + d.getDate());
+            System.out.println("Orcamento diario em " + currentTrip.getCurrency() + ": " + d.getBudget());
+            System.out.println("Valor em real: " + d.getBudgetReal(currentTrip.getCurrencyValue()));
+        }
+
+        System.out.println("===============================");
+        System.out.println("Gostaria de visualizar os gastos de algum dia?");
+        System.out.println("Digite o numero do dia");
     }
 
     private void addExpense(Scanner scanner, Trip currentTrip){
@@ -137,9 +167,9 @@ public class Menu {
         }
     }
 
-    private void showTrips(Scanner scanner, List<Trip> tripList){
+    private void showTrips(Scanner scanner){
         System.out.println("Lista de viagens:");
-        tripList = tripController.getTripList();
+        List<Trip> tripList = tripController.getTripList();
         for(int i=0;i<tripList.size();i++){
             Trip t = tripList.get(i);
             System.out.println( (i+1) + ". Viagem " + t.getName() + " " + t.getId());
@@ -183,8 +213,8 @@ public class Menu {
 
     private int readInt(Scanner scanner, String message){
         while (true){
-            System.out.println(message);
-            String answer = scanner.nextLine();
+            if(!message.isBlank()) System.out.println(message);
+            String answer = scanner.nextLine().trim();
             try{
                 return Integer.parseInt(answer);
             } catch (NumberFormatException e){
