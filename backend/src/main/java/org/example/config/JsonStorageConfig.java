@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.example.model.*; //
 import org.example.repository.*; // importa as classes de repositório (UserRepository, TripRepository, etc.)
+import org.springframework.beans.factory.annotation.Value; // para injetar o valor da propriedade app.data-dir
 import org.springframework.context.annotation.Bean; // para registrar beans no contexto do Spring
 import org.springframework.context.annotation.Configuration; // para marcar esta classe como uma classe de configuração do Spring
 
@@ -19,8 +20,17 @@ import java.time.format.DateTimeFormatter;
 @Configuration // Indica que esta classe é uma classe de configuração do Spring, onde podemos definir beans e configurações
 public class JsonStorageConfig {
 
-    // Pasta onde ficam os arquivos JSON
-    private static final Path DATA_DIR = Paths.get("backend/src/main/resources/data");
+    // Pasta onde ficam os arquivos JSON. Vem da propriedade app.data-dir,
+    // a mesma usada pelo AppInitializer, para não divergirem (causa do HTTP 500).
+    // O valor padrão abaixo só vale quando a classe é instanciada via `new`
+    // (ex.: TripController, fora do Spring); quando gerenciada pelo Spring, o
+    // @Value sobrescreve com a propriedade configurada.
+    @Value("${app.data-dir}")
+    private String dataDir = "backend/src/main/resources/data";
+
+    private Path dataDir() {
+        return Paths.get(dataDir);
+    }
 
     // Configura o Jackson (conversor Java <-> JSON)
     @Bean
@@ -40,26 +50,26 @@ public class JsonStorageConfig {
     // Cria e registra cada repository com seu arquivo correspondente
     @Bean
     public UserRepository userRepository(ObjectMapper objectMapper) {
-        return new UserRepository(DATA_DIR.resolve("users.json"), objectMapper);
+        return new UserRepository(dataDir().resolve("users.json"), objectMapper);
     }
 
     @Bean
     public TripRepository tripRepository(ObjectMapper objectMapper) {
-        return new TripRepository(DATA_DIR.resolve("trips.json"), objectMapper);
+        return new TripRepository(dataDir().resolve("trips.json"), objectMapper);
     }
 
     @Bean
     public ExpenseRepository expenseRepository(ObjectMapper objectMapper) {
-        return new ExpenseRepository(DATA_DIR.resolve("expenses.json"), objectMapper);
+        return new ExpenseRepository(dataDir().resolve("expenses.json"), objectMapper);
     }
 
     @Bean
     public CategoryRepository categoryRepository(ObjectMapper objectMapper) {
-        return new CategoryRepository(DATA_DIR.resolve("categories.json"), objectMapper);
+        return new CategoryRepository(dataDir().resolve("categories.json"), objectMapper);
     }
 
     @Bean
     public SettlementRepository settlementRepository(ObjectMapper objectMapper) {
-        return new SettlementRepository(DATA_DIR.resolve("settlements.json"), objectMapper);
+        return new SettlementRepository(dataDir().resolve("settlements.json"), objectMapper);
     }
 }

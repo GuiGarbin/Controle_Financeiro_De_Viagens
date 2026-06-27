@@ -18,7 +18,17 @@ function startJava() {
     const fs = require('fs')
     console.log('JAR exists:', fs.existsSync(jarPath))
 
-    javaProcess = spawn('java', ['-jar', jarPath], {
+    // Passa um caminho de dados absoluto e gravavel para o backend, em vez de
+    // deixar o Spring resolver um caminho relativo a partir do cwd (frontend/),
+    // o que quebrava a escrita (HTTP 500). Empacotado: pasta userData do app;
+    // dev: a pasta de dados do backend no repositorio.
+    const dataDir = app.isPackaged
+        ? path.join(app.getPath('userData'), 'data')
+        : path.join(__dirname, '..', '..', 'backend', 'src', 'main', 'resources', 'data')
+
+    console.log('Data dir:', dataDir)
+
+    javaProcess = spawn('java', ['-jar', jarPath, `--app.data-dir=${dataDir}`], {
         stdio: ['ignore', 'pipe', 'pipe']
     })
 

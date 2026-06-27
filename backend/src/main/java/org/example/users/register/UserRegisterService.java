@@ -1,21 +1,24 @@
 package org.example.users.register;
 
+import org.example.repository.UserRepository;
 import org.example.users.User;
 import org.example.util.IdGenerator;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserRegisterService {
 
-    // Armazenamento em memória: os usuários registrados ficam guardados nesta
-    // lista enquanto a aplicação estiver rodando. Por enquanto não salvamos em
-    // arquivo no computador, tudo fica apenas na memória.
-    private final List<User> registeredUsers = new ArrayList<>();
+    // Persistência em arquivo (users.json) via UserRepository. Os usuários
+    // sobrevivem a reinícios da aplicação, ao contrário da antiga lista em memória.
+    private final UserRepository userRepository;
+
+    public UserRegisterService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // Registra um novo usuário a partir dos dados informados.
     // Retorna o usuário criado em caso de sucesso, ou null se os dados forem
@@ -39,28 +42,29 @@ public class UserRegisterService {
         newUser.setEmail(email);
         newUser.setPassword(userPassword);
 
-        // Salva o usuário na memória.
-        registeredUsers.add(newUser);
+        // Salva o usuário no arquivo (users.json).
+        userRepository.save(newUser);
 
         return newUser;
     }
 
     // Verifica se já existe um usuário cadastrado com o email informado.
     private boolean emailAlreadyExists(String userEmail){
-        return registeredUsers.stream()
-                .anyMatch(u -> userEmail.equalsIgnoreCase(u.getEmail()));
+        return findByEmail(userEmail).isPresent();
     }
 
-    // Retorna a lista de usuários registrados em memória.
+    // Retorna a lista de usuários registrados (lidos do arquivo).
     public List<User> getRegisteredUsers(){
-        return registeredUsers;
+        return userRepository.findAll();
     }
 
     // Procura um usuário registrado pelo email (usado pelo login).
+    // Normaliza para minúsculas porque os emails são gravados nesse formato.
     public Optional<User> findByEmail(String email){
-        return registeredUsers.stream()
-                .filter(u -> u.getEmail() != null && u.getEmail().equalsIgnoreCase(email))
-                .findFirst();
+        if (email == null) {
+            return Optional.empty();
+        }
+        return userRepository.findByEmail(email.toLowerCase());
     }
 
     private boolean checkValidEmail(String userEmail){
