@@ -30,7 +30,7 @@ const remaining = trip.initialBudget - totalSpent
 const dailyBudget = trip.initialBudget / trip.dailyBudget.length
 const pctUsed = ((totalSpent / trip.initialBudget) * 100).toFixed(1)
 
-function DashBoardPage() {
+function DashBoardPage({ onLogout }) {
     return (
         <div className={styles.shell}>
 
@@ -63,7 +63,11 @@ function DashBoardPage() {
                         <h1 className={styles.pageTitle}>Visão geral</h1>
                         <p className={styles.pageSubtitle}>{trip.destination} · {trip.currency} ({trip.symbol}) · {trip.dailyBudget.length} dias</p>
                     </div>
-                    <span className={styles.badge}>{trip.createdBy}</span>
+                    <div className={styles.headerRight}>
+                        <span className={styles.badge}>{trip.createdBy}</span>
+                        {/* Sai da conta e volta para a tela inicial */}
+                        <button className={styles.logoutButton} onClick={onLogout}>Sair</button>
+                    </div>
                 </div>
 
                 <div className={styles.metrics}>

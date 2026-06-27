@@ -17,6 +17,9 @@
 .pageTitle { font-size: 18px; font-weight: 500; color: #1c1917; }
 .pageSubtitle { font-size: 12px; color: #a8a29e; margin-top: 2px; }
 .badge { font-size: 11px; padding: 4px 10px; border-radius: 99px; border: 0.5px solid #e7e5e4; color: #78716c; background: #fff; }
+.headerRight { display: flex; align-items: center; gap: 10px; }
+.logoutButton { font-size: 11px; padding: 4px 12px; border-radius: 99px; border: 0.5px solid #e7e5e4; color: #78716c; background: #fff; cursor: pointer; transition: all 0.15s; }
+.logoutButton:hover { color: #1c1917; border-color: #a8a29e; }
 
 .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .metric { background: #f1efe8; border-radius: 8px; padding: 14px; }

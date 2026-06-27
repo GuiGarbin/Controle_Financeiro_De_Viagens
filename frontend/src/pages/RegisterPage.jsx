@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { register } from '../services/authService'
 import styles from './RegisterPage.module.css'
 
 function RegisterPage({ onRegisterSuccess, goToBoot }) {
@@ -17,8 +18,8 @@ function RegisterPage({ onRegisterSuccess, goToBoot }) {
         setLoading(true)
         setError('')
         try {
-            // TODO: replace with real API call when backend is ready
-            await new Promise(resolve => setTimeout(resolve, 800))
+            // Chama o backend para cadastrar o usuário (salvo em memória por enquanto).
+            await register(fullName, birthDate, email, password)
             onRegisterSuccess()
         } catch (err) {
             setError(err.message)
@@ -53,7 +54,9 @@ function RegisterPage({ onRegisterSuccess, goToBoot }) {
                 <div className={styles.field}>
                     <label className={styles.label}>Data de nascimento</label>
                     <input
-                        className={`${styles.input} ${styles.dateInput}`}
+                        // Mantém o texto cinza apenas enquanto nenhuma data foi escolhida;
+                        // depois de selecionar, a data aparece na cor escura padrão e legível.
+                        className={`${styles.input} ${!birthDate ? styles.dateInputEmpty : ''}`}
                         type="date"
                         value={birthDate}
                         onChange={e => setBirthDate(e.target.value)}

@@ -20,8 +20,9 @@ function App() {
       <div>
 
         {currentPage === 'boot' && (
+            // Ao escolher criar conta, vai para a tela de cadastro (antes ia direto para o dashboard)
             <BootPage onLogin={() => setCurrentPage('login')}
-                      onRegister={() => setCurrentPage('dashboard')}/>
+                      onRegister={() => setCurrentPage('register')}/>
         )}
 
         {currentPage === 'login' && (
@@ -29,7 +30,8 @@ function App() {
                       goToBoot={() => setCurrentPage('boot')}/>
         )}
 
-        {currentPage === 'dashboard' && <DashBoardPage />}
+        {/* Logout volta para a tela inicial (boot), onde dá pra entrar ou criar conta */}
+        {currentPage === 'dashboard' && <DashBoardPage onLogout={() => setCurrentPage('boot')} />}
 
         {currentPage === 'register' && (
             <RegisterPage
