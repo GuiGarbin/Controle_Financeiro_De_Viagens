@@ -15,7 +15,7 @@ function App() {
     setCurrentPage('dashboard')
   }
 
-  
+
   return (
       <div>
 
