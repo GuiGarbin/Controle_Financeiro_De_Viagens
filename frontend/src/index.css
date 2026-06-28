@@ -19,6 +19,16 @@ textarea {
     font-family: inherit;
 }
 
+/* Remove as setinhas (spinners) dos inputs numéricos — não faz sentido para valores em dinheiro */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
 @keyframes dpFade { from { opacity: 0; } to { opacity: 1; } }
 
 /* Transição branca auth -> dashboard (global p/ não ser escopado por CSS Modules) */
