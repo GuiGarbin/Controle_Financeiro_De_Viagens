@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 const { spawn } = require('child_process')
 const path = require('path')
 
@@ -39,9 +39,19 @@ function startJava() {
 }
 
 function createWindow() {
+    // Remove a barra de menu padrao do Electron (File/Edit/View...).
+    Menu.setApplicationMenu(null)
+
     const win = new BrowserWindow({
-        width: 800,
-        height: 500,
+        width: 1307,
+        height: 720,
+        minWidth: 1307,   // nao permite redimensionar abaixo do tamanho inicial
+        minHeight: 720,
+        center: true,     // abre centralizado na tela
+        autoHideMenuBar: true,
+        frame: false,            // sem a moldura nativa do Windows (usamos barra propria)
+        transparent: true,       // permite cantos arredondados via CSS
+        backgroundColor: '#00000000',
         webPreferences: {
             preload: app.isPackaged
                 ? path.join(process.resourcesPath, 'app.asar.unpacked', 'electron', 'preload.cjs')
@@ -57,7 +67,26 @@ function createWindow() {
         win.loadURL('http://localhost:5173')
     }
 
-    win.webContents.openDevTools()
+    // Controles de janela da barra personalizada (estilo macOS) no frontend.
+    let savedBounds = null
+    let isFullscreen = false
+
+    win.on('enter-full-screen', () => { isFullscreen = true })
+    win.on('leave-full-screen', () => {
+        isFullscreen = false
+        // Restaura o tamanho/posição anterior depois que a saída termina.
+        if (savedBounds) win.setBounds(savedBounds)
+    })
+    ipcMain.on('win:minimize', () => win.minimize())
+    ipcMain.on('win:fullscreen', () => {
+        if (isFullscreen) {
+            win.setFullScreen(false)
+        } else {
+            savedBounds = win.getBounds() // guarda o tamanho atual (inicial ou já redimensionado)
+            win.setFullScreen(true)
+        }
+    })
+    ipcMain.on('win:close', () => win.close())
 }
 
 app.whenReady().then(() => {
@@ -65,7 +94,26 @@ app.whenReady().then(() => {
     setTimeout(createWindow, 6000)
 })
 
+function killJava() {
+    const proc = javaProcess
+    if (!proc) return
+    javaProcess = null
+    const pid = proc.pid
+    if (process.platform === 'win32' && pid) {
+        try {
+            spawn('taskkill', ['/pid', String(pid), '/T', '/F'])
+        } catch (e) {
+            try { proc.kill() } catch (_) {}
+        }
+    } else {
+        try { proc.kill('SIGKILL') } catch (_) {}
+    }
+}
+
 app.on('window-all-closed', () => {
-    javaProcess?.kill()
+    killJava()
     if (process.platform !== 'darwin') app.quit()
 })
+
+app.on('before-quit', killJava)
+process.on('exit', killJava)

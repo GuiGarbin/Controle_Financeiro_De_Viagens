@@ -1,4 +1,4 @@
-.page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; background: linear-gradient(135deg, #1c1917 0%, #292524 60%, #44403c 100%); }
+.page { display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 24px; background: linear-gradient(135deg, #1c1917 0%, #292524 60%, #44403c 100%); }
 .card { width: 100%; max-width: 440px; background: #fafaf9; border-radius: 16px; padding: 36px 32px; box-sizing: border-box; }
 .backButton { background: none; border: none; font-size: 13px; color: #78716c; cursor: pointer; padding: 0; margin-bottom: 24px; display: block; transition: color 0.15s; }
 .backButton:hover { color: #1c1917; }

@@ -7,6 +7,8 @@ import RegisterPage from './pages/RegisterPage'
 import DashBoardPage from './pages/DashBoardPage'
 import CreateTripPage from './pages/CreateTripPage'
 import AddExpensePage from './pages/AddExpensePage'
+import TitleBar from './components/TitleBar'
+import appStyles from './App.module.css'
 
 
 function App() {
@@ -28,7 +30,9 @@ function App() {
 
 
   return (
-      <div>
+      <div className={appStyles.frame}>
+        <TitleBar />
+        <div className={appStyles.content}>
 
         {currentPage === 'boot' && (
             // Ao escolher criar conta, vai para a tela de cadastro (antes ia direto para o dashboard)
@@ -74,6 +78,7 @@ function App() {
                 goToBoot={() => setCurrentPage('boot')}
             />
         )}
+        </div>
       </div>
   )
 }
