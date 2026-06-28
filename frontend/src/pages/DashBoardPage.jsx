@@ -62,6 +62,7 @@ function DashBoardPage({ userId, onCreateTrip, onLogout }) {
     const [exAmount, setExAmount] = useState('')
     const [exDate, setExDate] = useState('')
     const [exMsg, setExMsg] = useState('')    // aviso de orçamento após adicionar
+    const [openDays, setOpenDays] = useState({}) // dias expandidos no "orçamento por dia"
 
     // Busca a viagem atual + a lista de viagens do usuário logado.
     async function reload() {
@@ -214,14 +215,34 @@ function DashBoardPage({ userId, onCreateTrip, onLogout }) {
                                 : pctSpent >= 90 ? '#dc2626'
                                     : pctSpent >= 75 ? '#febc2e'
                                         : '#28c840'
+                            const expenses = day.listExpenses || []
                             return (
-                                <div key={i} className={styles.dayRow}>
-                                    <span className={styles.dayDate}>{dayLabel(day.date)}</span>
-                                    <div className={styles.barWrap}>
-                                        <div className={styles.barFill} style={{ width: `${width}%`, background: color }} />
+                                <div key={i}>
+                                    <div className={styles.dayRow}>
+                                        <button className={styles.dayToggle}
+                                                onClick={() => setOpenDays(o => ({ ...o, [i]: !o[i] }))}
+                                                title="Ver gastos do dia">
+                                            {openDays[i] ? '▴' : '▾'}
+                                        </button>
+                                        <span className={styles.dayDate}>{dayLabel(day.date)}</span>
+                                        <div className={styles.barWrap}>
+                                            <div className={styles.barFill} style={{ width: `${width}%`, background: color }} />
+                                        </div>
+                                        <span className={styles.dayAmount}>{symbol} {fmt(dayRemaining)}</span>
+                                        <span className={styles.dayConverted}>R$ {toReal(dayRemaining)}</span>
                                     </div>
-                                    <span className={styles.dayAmount}>{symbol} {fmt(dayRemaining)}</span>
-                                    <span className={styles.dayConverted}>R$ {toReal(dayRemaining)}</span>
+                                    {openDays[i] && (
+                                        <div className={styles.dayExpenses}>
+                                            {expenses.length === 0
+                                                ? <div className={styles.dayExpEmpty}>Sem gastos neste dia</div>
+                                                : expenses.map((e, j) => (
+                                                    <div key={e.id || j} className={styles.dayExpRow}>
+                                                        <span>{e.description}</span>
+                                                        <span>{symbol} {fmt(e.amount)} · R$ {toReal(e.amount)}</span>
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    )}
                                 </div>
                             )
                         })}
