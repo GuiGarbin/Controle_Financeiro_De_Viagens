@@ -14,6 +14,31 @@ const fmt = (n) => Math.round(n || 0).toLocaleString('pt-BR')
 const fmt2 = (n) => (n || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 const dayLabel = (d) => (d || '').slice(0, 5)
 
+// "dd/MM/yyyy" -> Date (meia-noite local).
+const parseBr = (s) => {
+    const [d, m, y] = (s || '').split('/').map(Number)
+    return new Date(y, (m || 1) - 1, d || 1)
+}
+const todayMidnight = () => {
+    const n = new Date()
+    return new Date(n.getFullYear(), n.getMonth(), n.getDate())
+}
+
+// Rótulo de ciclo de vida da viagem, derivado das datas + status — mesma lógica
+// do detailsTrip do app de terminal:
+//  - hoje dentro do intervalo  -> Em andamento
+//  - início no futuro          -> Planejada (atual/ativa) ou Salva (inativa)
+//  - fim no passado            -> Encerrada
+const tripStatusLabel = (t) => {
+    if (!t || !t.startDate || !t.endDate) return ''
+    const today = todayMidnight()
+    const start = parseBr(t.startDate)
+    const end = parseBr(t.endDate)
+    if (start <= today && today <= end) return 'Em andamento'
+    if (start > today) return t.status ? 'Planejada' : 'Salva'
+    return 'Encerrada'
+}
+
 const VIEW_TITLES = {
     overview: 'Visão geral',
     history: 'Histórico',
@@ -214,6 +239,7 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
                                 <div className={styles.tripCardMeta}>
                                     {t.destination} · {t.startDate} — {t.endDate} · {tSym} {fmt(t.budget)}
                                 </div>
+                                <span className={styles.lifecycle}>{tripStatusLabel(t)}</span>
                             </div>
                             <div className={styles.tripCardActions}>
                                 {t.status
@@ -358,7 +384,7 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
                         <p className={styles.pageSubtitle}>{subtitle()}</p>
                     </div>
                     <div className={styles.headerRight}>
-                        {trip && <span className={styles.badge}>Em andamento</span>}
+                        {trip && <span className={styles.badge}>{tripStatusLabel(trip)}</span>}
                         {trip && <button className={styles.logoutButton} onClick={onAddExpense}>+ Novo gasto</button>}
                         <button className={styles.logoutButton} onClick={onCreateTrip}>+ Nova viagem</button>
                         {/* Sai da conta e volta para a tela inicial */}
