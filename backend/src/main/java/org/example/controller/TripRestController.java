@@ -1,10 +1,12 @@
 package org.example.controller;
 
 import org.example.dto.request.AddExpenseRequest;
+import org.example.dto.request.AddTuristicPointRequest;
 import org.example.dto.request.TripCreateRequest;
 import org.example.dto.request.response.AddExpenseResponse;
 import org.example.dto.request.response.ApiResponse;
 import org.example.expenses.Expenses;
+import org.example.expenses.TuristicPoint;
 import org.example.service.TripService;
 import org.example.trip.Trip;
 import org.springframework.http.ResponseEntity;
@@ -85,5 +87,20 @@ public class TripRestController {
             @PathVariable String id,
             @RequestParam(value = "date", required = false) String date) {
         return ResponseEntity.ok(ApiResponse.success(tripService.getExpenses(id, date)));
+    }
+
+    // POST /api/trips/{id}/turistic-points — adiciona ponto turístico; devolve a lista atualizada.
+    @PostMapping("/{id}/turistic-points")
+    public ResponseEntity<ApiResponse<List<TuristicPoint>>> addTuristicPoint(
+            @PathVariable String id,
+            @RequestBody AddTuristicPointRequest request) {
+        return ResponseEntity.ok(ApiResponse.success(
+                tripService.addTuristicPoint(id, request.getName(), request.getCost())));
+    }
+
+    // GET /api/trips/{id}/turistic-points — lista os pontos turísticos da viagem.
+    @GetMapping("/{id}/turistic-points")
+    public ResponseEntity<ApiResponse<List<TuristicPoint>>> listTuristicPoints(@PathVariable String id) {
+        return ResponseEntity.ok(ApiResponse.success(tripService.getTuristicPoints(id)));
     }
 }

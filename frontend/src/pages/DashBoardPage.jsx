@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getCurrentTrip, getTrips, activateTrip, deleteTrip } from '../services/tripService'
+import { getCurrentTrip, getTrips, activateTrip, deleteTrip, addTuristicPoint } from '../services/tripService'
 import styles from './DashBoardPage.module.css'
 
 // Simbolos das moedas mais comuns; cai no proprio codigo (ex.: "JPY") se nao mapeado.
@@ -24,11 +24,7 @@ const todayMidnight = () => {
     return new Date(n.getFullYear(), n.getMonth(), n.getDate())
 }
 
-// Rótulo de ciclo de vida da viagem, derivado das datas + status — mesma lógica
-// do detailsTrip do app de terminal:
-//  - hoje dentro do intervalo  -> Em andamento
-//  - início no futuro          -> Planejada (atual/ativa) ou Salva (inativa)
-//  - fim no passado            -> Encerrada
+
 const tripStatusLabel = (t) => {
     if (!t || !t.startDate || !t.endDate) return ''
     const today = todayMidnight()
@@ -45,6 +41,7 @@ const VIEW_TITLES = {
     trips: 'Minhas viagens',
     itinerary: 'Itinerário',
     report: 'Relatório',
+    turistic: 'Pontos turísticos',
 }
 
 function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
@@ -53,7 +50,9 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
     const [trips, setTrips] = useState([])    // todas as viagens do usuário
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
-    const [busy, setBusy] = useState(false)   // ações de ativar/excluir em andamento
+    const [busy, setBusy] = useState(false)   // ações de ativar/excluir/adicionar em andamento
+    const [tpName, setTpName] = useState('')  // form de ponto turístico
+    const [tpCost, setTpCost] = useState('')
 
     // Busca a viagem atual + a lista de viagens do usuário logado.
     async function reload() {
@@ -82,6 +81,17 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
         setBusy(true)
         try { await deleteTrip(id, userId); await reload() }
         catch (e) { setError(e.message) }
+        finally { setBusy(false) }
+    }
+
+    async function addPoint() {
+        if (!tpName || !tpCost) { setError('Informe nome e custo do ponto turístico.'); return }
+        setBusy(true)
+        try {
+            await addTuristicPoint(trip.id, { name: tpName, cost: Number(tpCost) }, userId)
+            setTpName(''); setTpCost('')
+            await reload()
+        } catch (e) { setError(e.message) }
         finally { setBusy(false) }
     }
 
@@ -118,6 +128,7 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
             const n = days.reduce((s, d) => s + (d.listExpenses ? d.listExpenses.length : 0), 0)
             return `${trip.name} · ${n} gasto(s)`
         }
+        if (view === 'turistic') return `${trip.name} · ${points.length} ponto(s)`
         if (view === 'itinerary' || view === 'report') return `${trip.name} · ${trip.startDate} — ${trip.endDate}`
         return `${trip.destination} · ${trip.currency} (${symbol}) · ${days.length} dias`
     }
@@ -350,6 +361,32 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
         )
     }
 
+    function renderTuristic() {
+        if (!trip) return noTripBlock()
+        return (
+            <div className={styles.card}>
+                <div className={styles.toolbar}>
+                    <div className={styles.cardTitle} style={{ marginBottom: 0 }}>PONTOS TURÍSTICOS</div>
+                </div>
+                <div className={styles.tpForm}>
+                    <input className={styles.tpInput} type="text" placeholder="Nome do ponto"
+                           value={tpName} onChange={e => setTpName(e.target.value)} />
+                    <input className={styles.tpInputCost} type="number" min="0" step="0.01"
+                           placeholder={`Custo (${symbol})`} value={tpCost}
+                           onChange={e => setTpCost(e.target.value)} />
+                    <button className={styles.primaryAction} disabled={busy} onClick={addPoint}>Adicionar</button>
+                </div>
+                {points.length === 0 && <div className={styles.emptyHint}>Nenhum ponto turístico cadastrado.</div>}
+                {points.map((p, i) => (
+                    <div key={i} className={styles.pointRow}>
+                        <span className={styles.pointName}>📍 {p.name}</span>
+                        <span className={styles.pointCost}>{symbol} {fmt(p.cost)} · R$ {toReal(p.cost)}</span>
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
     return (
         <div className={styles.shell}>
             <aside className={styles.sidebar}>
@@ -363,8 +400,7 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
                 <div className={styles.navItem} onClick={onAddExpense}>Novo gasto</div>
                 {navView('Histórico', 'history')}
                 {navView('Minhas viagens', 'trips')}
-                {/* Pontos turísticos: ainda não implementado (sem endpoint) */}
-                <div className={styles.navItemDisabled} title="Em breve">Pontos turísticos</div>
+                {navView('Pontos turísticos', 'turistic')}
 
                 <span className={styles.navSection}>PLANEJAMENTO</span>
                 {navView('Itinerário', 'itinerary')}
@@ -397,6 +433,7 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
                 {view === 'history' && renderHistory()}
                 {view === 'itinerary' && renderItinerary()}
                 {view === 'report' && renderReport()}
+                {view === 'turistic' && renderTuristic()}
             </main>
         </div>
     )

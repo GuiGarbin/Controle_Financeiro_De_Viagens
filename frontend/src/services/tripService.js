@@ -83,3 +83,19 @@ export async function getExpenses(tripId, date, userId) {
     const response = await fetch(url, { headers: buildHeaders(userId) })
     return unwrap(response)
 }
+
+// Lista os pontos turísticos de uma viagem.
+export async function getTuristicPoints(tripId, userId) {
+    const response = await fetch(`${BASE_URL}/trips/${tripId}/turistic-points`, { headers: buildHeaders(userId) })
+    return unwrap(response)
+}
+
+// Adiciona um ponto turístico. `point` = { name, cost }. Retorna a lista atualizada.
+export async function addTuristicPoint(tripId, point, userId) {
+    const response = await fetch(`${BASE_URL}/trips/${tripId}/turistic-points`, {
+        method: 'POST',
+        headers: buildHeaders(userId),
+        body: JSON.stringify(point),
+    })
+    return unwrap(response)
+}

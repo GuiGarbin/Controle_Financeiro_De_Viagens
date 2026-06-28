@@ -7,6 +7,7 @@ import org.example.dto.request.response.AddExpenseResponse;
 import org.example.exception.ResourceNotFoundException;
 import org.example.exception.ValidationException;
 import org.example.expenses.Expenses;
+import org.example.expenses.TuristicPoint;
 import org.example.repository.TripRepository;
 import org.example.trip.Trip;
 import org.springframework.stereotype.Service;
@@ -167,6 +168,27 @@ public class TripService {
             result.addAll(day.getListExpenses());
         }
         return result;
+    }
+
+    // --- Pontos turisticos (Fase 5) ---
+
+    // Lista os pontos turisticos da viagem.
+    public List<TuristicPoint> getTuristicPoints(String tripId) {
+        return getTripById(tripId).getListTuristic();
+    }
+
+    // Adiciona um ponto turistico (nome + custo na moeda da viagem) e devolve a lista atualizada.
+    public List<TuristicPoint> addTuristicPoint(String tripId, String name, double cost) {
+        Trip trip = getTripById(tripId);
+        if (name == null || name.isBlank()) {
+            throw new ValidationException("O nome do ponto turistico e obrigatorio.");
+        }
+        if (cost < 0) {
+            throw new ValidationException("O custo nao pode ser negativo.");
+        }
+        trip.addTuristicPoint(new TuristicPoint(cost, name));
+        tripRepository.save(trip);
+        return trip.getListTuristic();
     }
 
     // --- Auxiliares ---
