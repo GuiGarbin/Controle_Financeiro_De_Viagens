@@ -91,7 +91,8 @@ function AuthFlow({ onAuthSuccess }) {
                             <div className={styles.field}>
                                 <label className={styles.label}>Data de nascimento</label>
                                 <DatePicker value={birthDate} onChange={setBirthDate}
-                                            placeholder="Clique aqui e selecione a data" />
+                                            placeholder="Clique aqui e selecione a data"
+                                            max={new Date().toLocaleDateString('en-CA')} />
                             </div>
                         </>
                     )}

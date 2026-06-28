@@ -5,21 +5,23 @@ const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', '
 const WEEK = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
 
 // Seletor de data em 3 etapas (ano -> mês -> dia), com transição por opacidade.
-// Não permite escolher data futura. Emite a data em ISO (aaaa-mm-dd) via onChange.
-function DatePicker({ value, onChange, placeholder = 'Selecione a data' }) {
+// Limites opcionais via props `min`/`max` (ISO aaaa-mm-dd): fora deles, meses e
+// dias ficam desabilitados. Emite a data em ISO (aaaa-mm-dd) via onChange.
+function DatePicker({ value, onChange, placeholder = 'Selecione a data', min, max }) {
     const now = new Date()
-    const curYear = now.getFullYear()
-    const curMonth = now.getMonth()
-    const curDay = now.getDate()
-    const MIN_YEAR = curYear - 119
+    const parseIso = (s) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d) }
+    const maxDate = max ? parseIso(max) : new Date(now.getFullYear() + 10, 11, 31)
+    const minDate = min ? parseIso(min) : new Date(now.getFullYear() - 120, 0, 1)
+    const maxYear = maxDate.getFullYear()
+    const minYear = minDate.getFullYear()
 
     const [open, setOpen] = useState(false)
     const [step, setStep] = useState('year')   // year | month | day
     const [year, setYear] = useState(value ? Number(value.slice(0, 4)) : null)
     const [month, setMonth] = useState(value ? Number(value.slice(5, 7)) - 1 : null)
-    const [winTop, setWinTop] = useState(0)     // janela de rolagem dos anos (0 = ano atual)
+    const [winTop, setWinTop] = useState(0)     // janela de rolagem dos anos (0 = mais recente)
 
-    const totalYears = curYear - MIN_YEAR + 1
+    const totalYears = maxYear - minYear + 1
     const maxTop = Math.max(0, totalYears - 12)
 
     function openPicker() { setStep('year'); setOpen(true) }
@@ -42,8 +44,8 @@ function DatePicker({ value, onChange, placeholder = 'Selecione a data' }) {
     // Anos visíveis (mais recentes no topo; rolar para baixo mostra os mais antigos).
     const years = []
     for (let i = 0; i < 12; i++) {
-        const y = curYear - (winTop + i)
-        if (y >= MIN_YEAR) years.push(y)
+        const y = maxYear - (winTop + i)
+        if (y >= minYear) years.push(y)
     }
 
     // Células do calendário.
@@ -97,7 +99,8 @@ function DatePicker({ value, onChange, placeholder = 'Selecione a data' }) {
                             {step === 'month' && (
                                 <div className={styles.grid}>
                                     {MONTHS.map((m, i) => {
-                                        const disabled = year === curYear && i > curMonth
+                                        const disabled = (year === maxYear && i > maxDate.getMonth())
+                                            || (year === minYear && i < minDate.getMonth())
                                         return (
                                             <button type="button" key={m} disabled={disabled}
                                                     className={`${styles.box} ${i === month ? styles.boxSel : ''}`}
@@ -115,7 +118,8 @@ function DatePicker({ value, onChange, placeholder = 'Selecione a data' }) {
                                     <div className={styles.dayGrid}>
                                         {cells.map((d, i) => {
                                             if (d === null) return <span key={i} />
-                                            const disabled = year === curYear && month === curMonth && d > curDay
+                                            const dd = new Date(year, month, d)
+                                            const disabled = dd < minDate || dd > maxDate
                                             return (
                                                 <button type="button" key={i} disabled={disabled}
                                                         className={styles.day} onClick={() => pickDay(d)}>{d}</button>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { createTrip } from '../services/tripService'
+import DatePicker from '../components/DatePicker'
 import styles from './CreateTripPage.module.css'
 
 // Moedas mais comuns (codigos ISO 4217). O backend resolve o cambio para BRL.
@@ -89,13 +90,11 @@ function CreateTripPage({ userId, onCreated, goToDashboard }) {
                 <div className={styles.row2}>
                     <div className={styles.field}>
                         <label className={styles.label}>Início</label>
-                        <input className={styles.input} type="date" value={startDate}
-                               onChange={e => setStartDate(e.target.value)} />
+                        <DatePicker value={startDate} onChange={setStartDate} />
                     </div>
                     <div className={styles.field}>
                         <label className={styles.label}>Fim</label>
-                        <input className={styles.input} type="date" value={endDate} min={startDate}
-                               onChange={e => setEndDate(e.target.value)} />
+                        <DatePicker value={endDate} onChange={setEndDate} min={startDate} />
                     </div>
                 </div>
 

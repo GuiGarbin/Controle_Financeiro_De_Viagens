@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getCurrentTrip, getTrips, activateTrip, deleteTrip, addTuristicPoint, addExpense } from '../services/tripService'
+import DatePicker from '../components/DatePicker'
 import styles from './DashBoardPage.module.css'
 
 // Simbolos das moedas mais comuns; cai no proprio codigo (ex.: "JPY") se nao mapeado.
@@ -426,9 +427,8 @@ function DashBoardPage({ userId, onCreateTrip, onLogout }) {
                 </div>
                 <div className={styles.formField}>
                     <label className={styles.formLabel}>Data</label>
-                    <input className={styles.formInput} type="date" value={exDate}
-                           min={toIsoDate(trip.startDate)} max={toIsoDate(trip.endDate)}
-                           onChange={e => setExDate(e.target.value)} />
+                    <DatePicker value={exDate} onChange={setExDate}
+                                min={toIsoDate(trip.startDate)} max={toIsoDate(trip.endDate)} />
                 </div>
                 <button className={styles.primaryAction} disabled={busy} onClick={submitExpense}>
                     Adicionar gasto
