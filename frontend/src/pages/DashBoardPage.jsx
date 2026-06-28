@@ -204,15 +204,21 @@ function DashBoardPage({ userId, onCreateTrip, onLogout }) {
                     <div className={styles.card} style={{ flex: 1.5 }}>
                         <div className={styles.cardTitle}>ORÇAMENTO POR DIA</div>
                         {days.map((day, i) => {
-                            const dayRemaining = day.budget - daySpent(day)
-                            const pct = day.budget > 0
-                                ? Math.max(0, Math.min(100, (dayRemaining / day.budget) * 100))
-                                : 0
+                            const spent = daySpent(day)
+                            const dayRemaining = day.budget - spent
+                            // A barra mostra o quanto JÁ foi gasto do orçamento do dia.
+                            const pctSpent = day.budget > 0 ? (spent / day.budget) * 100 : 0
+                            const width = Math.min(100, pctSpent)
+                            // Verde -> amarelo (75%) -> vermelho (90%) -> preto (100%).
+                            const color = pctSpent >= 100 ? '#1c1917'
+                                : pctSpent >= 90 ? '#dc2626'
+                                    : pctSpent >= 75 ? '#febc2e'
+                                        : '#28c840'
                             return (
                                 <div key={i} className={styles.dayRow}>
                                     <span className={styles.dayDate}>{dayLabel(day.date)}</span>
                                     <div className={styles.barWrap}>
-                                        <div className={styles.barFill} style={{ width: `${pct}%` }} />
+                                        <div className={styles.barFill} style={{ width: `${width}%`, background: color }} />
                                     </div>
                                     <span className={styles.dayAmount}>{symbol} {fmt(dayRemaining)}</span>
                                     <span className={styles.dayConverted}>R$ {toReal(dayRemaining)}</span>
