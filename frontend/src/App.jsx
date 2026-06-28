@@ -15,10 +15,15 @@ function App() {
   // Id do usuário logado (retornado por login/cadastro). Usado para escopar as
   // viagens por dono (header X-User-Id). null = ninguém logado.
   const [userId, setUserId] = useState(null)
+  // Sobreposição branca para a transição suave auth -> dashboard.
+  const [overlay, setOverlay] = useState(null) // 'in' | 'out' | null
 
   function handleAuthSuccess(id) {
     setUserId(id)
-    setCurrentPage('dashboard')
+    setOverlay('in') // o branco cobre a tela
+    // troca para o dashboard por trás do branco e depois revela com fade
+    setTimeout(() => { setCurrentPage('dashboard'); setOverlay('out') }, 360)
+    setTimeout(() => setOverlay(null), 760)
   }
 
   function handleLogout() {
@@ -63,6 +68,9 @@ function App() {
             />
         )}
         </div>
+        {overlay && (
+            <div className={`${appStyles.whiteout} ${overlay === 'out' ? appStyles.whiteoutOut : appStyles.whiteoutIn}`} />
+        )}
       </div>
   )
 }

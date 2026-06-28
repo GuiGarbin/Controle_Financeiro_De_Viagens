@@ -7,8 +7,9 @@ import styles from './AuthFlow.module.css'
 // (marrom -> branco), o texto inicial some e os campos aparecem. Tudo é dirigido
 // por um único estado `open` + classe na .stage (CSS cuida das transições).
 function AuthFlow({ onAuthSuccess }) {
-    const [mode, setMode] = useState('login')   // conteúdo do card: login | register
-    const [open, setOpen] = useState(false)      // card expandido (morph)?
+    const [mode, setMode] = useState('login')
+    const [open, setOpen] = useState(false)
+    const [exiting, setExiting] = useState(false) // limpa o card antes do white-out
 
     const [fullName, setFullName] = useState('')
     const [birthDate, setBirthDate] = useState('')
@@ -40,7 +41,8 @@ function AuthFlow({ onAuthSuccess }) {
             const data = mode === 'login'
                 ? await login(email, password)
                 : await register(fullName, birthDate, email, password)
-            onAuthSuccess(data.userId)
+            setExiting(true) // some com os campos; o App assume com o white-out
+            setTimeout(() => onAuthSuccess(data.userId), 240)
         } catch (err) {
             setError(err.message)
         } finally {
@@ -51,7 +53,7 @@ function AuthFlow({ onAuthSuccess }) {
     const isLogin = mode === 'login'
 
     return (
-        <div className={`${styles.stage} ${open ? styles.stageOpen : ''}`}>
+        <div className={`${styles.stage} ${open ? styles.stageOpen : ''} ${exiting ? styles.stageExiting : ''}`}>
             <div className={styles.hero}>
                 <div className={styles.badge}>✈ Controle de Viagens</div>
                 <h1 className={styles.title}>Sua viagem,<br />sob controle.</h1>
