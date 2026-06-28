@@ -1,9 +1,7 @@
 import { useState } from 'react'
 
 
-import LoginPage from './pages/LoginPage'
-import BootPage from './pages/BootPage'
-import RegisterPage from './pages/RegisterPage'
+import AuthFlow from './pages/AuthFlow'
 import DashBoardPage from './pages/DashBoardPage'
 import CreateTripPage from './pages/CreateTripPage'
 import AddExpensePage from './pages/AddExpensePage'
@@ -13,7 +11,7 @@ import appStyles from './App.module.css'
 
 function App() {
 
-  const [currentPage, setCurrentPage] = useState('boot')
+  const [currentPage, setCurrentPage] = useState('auth')
   // Id do usuário logado (retornado por login/cadastro). Usado para escopar as
   // viagens por dono (header X-User-Id). null = ninguém logado.
   const [userId, setUserId] = useState(null)
@@ -25,7 +23,7 @@ function App() {
 
   function handleLogout() {
     setUserId(null)
-    setCurrentPage('boot')
+    setCurrentPage('auth')
   }
 
 
@@ -34,18 +32,11 @@ function App() {
         <TitleBar />
         <div className={appStyles.content}>
 
-        {currentPage === 'boot' && (
-            // Ao escolher criar conta, vai para a tela de cadastro (antes ia direto para o dashboard)
-            <BootPage onLogin={() => setCurrentPage('login')}
-                      onRegister={() => setCurrentPage('register')}/>
+        {currentPage === 'auth' && (
+            <AuthFlow onAuthSuccess={handleAuthSuccess} />
         )}
 
-        {currentPage === 'login' && (
-            <LoginPage onLoginSuccess={handleAuthSuccess}
-                      goToBoot={() => setCurrentPage('boot')}/>
-        )}
-
-        {/* Logout volta para a tela inicial (boot), onde dá pra entrar ou criar conta */}
+        {/* Logout volta para a tela de autenticação */}
         {currentPage === 'dashboard' && (
             <DashBoardPage
                 userId={userId}
@@ -69,13 +60,6 @@ function App() {
                 userId={userId}
                 onAdded={() => setCurrentPage('dashboard')}
                 goToDashboard={() => setCurrentPage('dashboard')}
-            />
-        )}
-
-        {currentPage === 'register' && (
-            <RegisterPage
-                onRegisterSuccess={handleAuthSuccess}
-                goToBoot={() => setCurrentPage('boot')}
             />
         )}
         </div>
