@@ -1,48 +1,68 @@
 import { useEffect, useState } from 'react'
-import { getCurrentTrip } from '../services/tripService'
+import { getCurrentTrip, getTrips, activateTrip, deleteTrip } from '../services/tripService'
 import styles from './DashBoardPage.module.css'
 
 // Simbolos das moedas mais comuns; cai no proprio codigo (ex.: "JPY") se nao mapeado.
 const CURRENCY_SYMBOLS = {
     BRL: 'R$', USD: 'US$', EUR: '€', JPY: '¥', GBP: '£',
-    CHF: 'CHF', CAD: 'C$', AUD: 'A$', ARS: '$',
+    CHF: 'CHF', CAD: 'C$', AUD: 'A$', ARS: '$', CLP: '$',
 }
 const symbolFor = (code) => CURRENCY_SYMBOLS[code] || code || ''
-
-// Soma os gastos (na moeda da viagem) de um dia.
-const daySpent = (day) =>
-    (day.listExpenses || []).reduce((sum, e) => sum + (e.amount || 0), 0)
-
-// Formata um valor inteiro na moeda estrangeira (com separador de milhar).
+const daySpent = (day) => (day.listExpenses || []).reduce((s, e) => s + (e.amount || 0), 0)
+const tripSpent = (trip) => (trip.dailyBudgetList || []).reduce((s, d) => s + daySpent(d), 0)
 const fmt = (n) => Math.round(n || 0).toLocaleString('pt-BR')
-
-// "07/06/2026" -> "07/06" (rotulo curto para as linhas por dia).
+const fmt2 = (n) => (n || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 const dayLabel = (d) => (d || '').slice(0, 5)
 
+const VIEW_TITLES = {
+    overview: 'Visão geral',
+    history: 'Histórico',
+    trips: 'Minhas viagens',
+    itinerary: 'Itinerário',
+    report: 'Relatório',
+}
+
 function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
-    const [trip, setTrip] = useState(null)
+    const [view, setView] = useState('overview')
+    const [trip, setTrip] = useState(null)   // viagem atual (status = true)
+    const [trips, setTrips] = useState([])    // todas as viagens do usuário
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
+    const [busy, setBusy] = useState(false)   // ações de ativar/excluir em andamento
+
+    // Busca a viagem atual + a lista de viagens do usuário logado.
+    async function reload() {
+        setError('')
+        const [cur, list] = await Promise.all([getCurrentTrip(userId), getTrips(userId)])
+        setTrip(cur)
+        setTrips(list || [])
+    }
 
     useEffect(() => {
         let active = true
-        // Busca a viagem atual do usuário logado (escopada por X-User-Id).
-        getCurrentTrip(userId)
-            .then((data) => { if (active) setTrip(data) })
-            .catch((err) => { if (active) setError(err.message) })
+        reload()
+            .catch((e) => { if (active) setError(e.message) })
             .finally(() => { if (active) setLoading(false) })
         return () => { active = false }
     }, [userId])
 
-    // --- Estados de carregamento / erro / vazio ---
-    if (loading) {
-        return (
-            <div className={styles.stateScreen}>
-                <div className={styles.stateText}>Carregando viagem...</div>
-            </div>
-        )
+    async function handleActivate(id) {
+        setBusy(true)
+        try { await activateTrip(id, userId); await reload(); setView('overview') }
+        catch (e) { setError(e.message) }
+        finally { setBusy(false) }
     }
 
+    async function handleDelete(id) {
+        setBusy(true)
+        try { await deleteTrip(id, userId); await reload() }
+        catch (e) { setError(e.message) }
+        finally { setBusy(false) }
+    }
+
+    if (loading) {
+        return <div className={styles.stateScreen}><div className={styles.stateText}>Carregando...</div></div>
+    }
     if (error) {
         return (
             <div className={styles.stateScreen}>
@@ -53,76 +73,50 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
         )
     }
 
-    if (!trip) {
-        return (
-            <div className={styles.stateScreen}>
-                <div className={styles.stateTitle}>Nenhuma viagem em andamento</div>
-                <div className={styles.stateText}>
-                    Crie uma viagem para acompanhar seus gastos aqui.
-                </div>
-                <button className={styles.stateButton} onClick={onCreateTrip}>Criar viagem</button>
-                <button className={styles.logoutButton} onClick={onLogout}>Sair</button>
-            </div>
-        )
-    }
-
-    // --- Dados derivados (na moeda da viagem) ---
-    const days = trip.dailyBudgetList || []
-    const points = trip.listTuristic || []
-    const symbol = symbolFor(trip.currency)
-    const rate = trip.currencyValue || 1 // BRL por 1 unidade da moeda da viagem
-    const toReal = (n) => (n * rate).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-
-    const budget = trip.budget || 0
+    // Valores derivados da viagem atual (na moeda da viagem).
+    const days = trip ? (trip.dailyBudgetList || []) : []
+    const points = trip ? (trip.listTuristic || []) : []
+    const symbol = trip ? symbolFor(trip.currency) : ''
+    const rate = trip ? (trip.currencyValue || 1) : 1 // BRL por 1 unidade da moeda
+    const toReal = (n) => fmt2(n * rate)
+    const budget = trip ? (trip.budget || 0) : 0
     const perDayBudget = days.length ? budget / days.length : 0
-    const totalSpent = days.reduce((sum, d) => sum + daySpent(d), 0)
+    const totalSpent = trip ? tripSpent(trip) : 0
     const remaining = budget - totalSpent
     const pctUsed = budget > 0 ? (totalSpent / budget) * 100 : 0
     const pctAvailable = Math.max(0, 100 - pctUsed)
 
-    return (
-        <div className={styles.shell}>
+    function subtitle() {
+        if (view === 'trips') return `${trips.length} viagem(ns)`
+        if (!trip) return 'Nenhuma viagem em andamento'
+        if (view === 'history') {
+            const n = days.reduce((s, d) => s + (d.listExpenses ? d.listExpenses.length : 0), 0)
+            return `${trip.name} · ${n} gasto(s)`
+        }
+        if (view === 'itinerary' || view === 'report') return `${trip.name} · ${trip.startDate} — ${trip.endDate}`
+        return `${trip.destination} · ${trip.currency} (${symbol}) · ${days.length} dias`
+    }
 
-            <aside className={styles.sidebar}>
-                <div className={styles.logo}>
-                    <div className={styles.logoIcon}>✈</div>
-                    <span className={styles.logoText}>TripFinance</span>
-                </div>
+    // Item de navegação que troca a view interna; `active` destaca a atual.
+    const navView = (label, key) => (
+        <div className={`${styles.navItem} ${view === key ? styles.active : ''}`} onClick={() => setView(key)}>
+            {label}
+        </div>
+    )
 
-                <span className={styles.navSection}>VIAGEM</span>
-                <div className={`${styles.navItem} ${styles.active}`}>Visão geral</div>
-                <div className={styles.navItem} onClick={onAddExpense}>Novo gasto</div>
-                <div className={styles.navItem}>Histórico</div>
-                <div className={styles.navItem}>Pontos turísticos</div>
+    function noTripBlock() {
+        return (
+            <div className={styles.card}>
+                <div className={styles.stateText}>Nenhuma viagem em andamento.</div>
+                <button className={styles.stateButton} style={{ marginTop: 12 }} onClick={onCreateTrip}>Criar viagem</button>
+            </div>
+        )
+    }
 
-                <span className={styles.navSection}>PLANEJAMENTO</span>
-                <div className={styles.navItem}>Itinerário</div>
-                <div className={styles.navItem}>Relatório</div>
-
-                <div className={styles.tripPill}>
-                    <div className={styles.tripPillLabel}>Viagem atual</div>
-                    <div className={styles.tripPillName}>{trip.name}</div>
-                    <div className={styles.tripPillDates}>{trip.startDate} — {trip.endDate}</div>
-                </div>
-            </aside>
-
-            <main className={styles.main}>
-                <div className={styles.header}>
-                    <div>
-                        <h1 className={styles.pageTitle}>Visão geral</h1>
-                        <p className={styles.pageSubtitle}>
-                            {trip.destination} · {trip.currency} ({symbol}) · {days.length} dias
-                        </p>
-                    </div>
-                    <div className={styles.headerRight}>
-                        <span className={styles.badge}>Em andamento</span>
-                        <button className={styles.logoutButton} onClick={onAddExpense}>+ Novo gasto</button>
-                        <button className={styles.logoutButton} onClick={onCreateTrip}>+ Nova viagem</button>
-                        {/* Sai da conta e volta para a tela inicial */}
-                        <button className={styles.logoutButton} onClick={onLogout}>Sair</button>
-                    </div>
-                </div>
-
+    function renderOverview() {
+        if (!trip) return noTripBlock()
+        return (
+            <>
                 <div className={styles.metrics}>
                     <div className={styles.metric}>
                         <div className={styles.metricLabel}>Orçamento total</div>
@@ -199,6 +193,184 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
                         </div>
                     </div>
                 </div>
+            </>
+        )
+    }
+
+    function renderTrips() {
+        return (
+            <div className={styles.card}>
+                <div className={styles.toolbar}>
+                    <div className={styles.cardTitle} style={{ marginBottom: 0 }}>SUAS VIAGENS</div>
+                    <button className={styles.primaryAction} onClick={onCreateTrip}>+ Nova viagem</button>
+                </div>
+                {trips.length === 0 && <div className={styles.emptyHint}>Nenhuma viagem cadastrada.</div>}
+                {trips.map((t) => {
+                    const tSym = symbolFor(t.currency)
+                    return (
+                        <div key={t.id} className={styles.tripCard}>
+                            <div>
+                                <div className={styles.tripCardName}>{t.name}</div>
+                                <div className={styles.tripCardMeta}>
+                                    {t.destination} · {t.startDate} — {t.endDate} · {tSym} {fmt(t.budget)}
+                                </div>
+                            </div>
+                            <div className={styles.tripCardActions}>
+                                {t.status
+                                    ? <span className={styles.statusActive}>Ativa</span>
+                                    : <button className={styles.smallBtn} disabled={busy} onClick={() => handleActivate(t.id)}>Ativar</button>}
+                                <button className={`${styles.smallBtn} ${styles.smallBtnDanger}`} disabled={busy} onClick={() => handleDelete(t.id)}>Excluir</button>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+        )
+    }
+
+    function renderHistory() {
+        if (!trip) return noTripBlock()
+        const rows = []
+        days.forEach((d) => (d.listExpenses || []).forEach((e) => rows.push(e)))
+        return (
+            <div className={styles.card}>
+                <div className={styles.cardTitle}>HISTÓRICO DE GASTOS</div>
+                {rows.length === 0 && <div className={styles.emptyHint}>Nenhum gasto registrado.</div>}
+                {rows.map((e, i) => (
+                    <div key={e.id || i} className={styles.histRow}>
+                        <span className={styles.histDate}>{dayLabel(e.date)}</span>
+                        <span className={styles.histDesc}>{e.description}</span>
+                        <span className={styles.histAmount}>{symbol} {fmt(e.amount)}</span>
+                        <span className={styles.histReal}>R$ {toReal(e.amount)}</span>
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
+    function renderItinerary() {
+        if (!trip) return noTripBlock()
+        return (
+            <div className={styles.card}>
+                <div className={styles.cardTitle}>ITINERÁRIO POR DIA</div>
+                {days.map((d, i) => {
+                    const spent = daySpent(d)
+                    const rem = d.budget - spent
+                    const expenses = d.listExpenses || []
+                    return (
+                        <div key={i} className={styles.itinDay}>
+                            <div className={styles.itinHeader}>
+                                <span className={styles.itinDate}>{d.date}</span>
+                                <span className={styles.itinMeta}>Restante {symbol} {fmt(rem)} de {symbol} {fmt(d.budget)}</span>
+                            </div>
+                            {expenses.length === 0
+                                ? <div className={styles.itinExp}><span>Sem gastos</span><span /></div>
+                                : expenses.map((e, j) => (
+                                    <div key={e.id || j} className={styles.itinExp}>
+                                        <span>{e.description}</span>
+                                        <span>{symbol} {fmt(e.amount)}</span>
+                                    </div>
+                                ))}
+                        </div>
+                    )
+                })}
+            </div>
+        )
+    }
+
+    function renderReport() {
+        if (!trip) return noTripBlock()
+        const allExp = []
+        days.forEach((d) => (d.listExpenses || []).forEach((e) => allExp.push(e)))
+        const avgPerDay = days.length ? totalSpent / days.length : 0
+        const daysWith = days.filter((d) => daySpent(d) > 0).length
+        const daysOver = days.filter((d) => daySpent(d) > d.budget).length
+        const biggest = allExp.reduce((m, e) => (e.amount > (m ? m.amount : -1) ? e : m), null)
+        return (
+            <>
+                <div className={styles.metrics}>
+                    <div className={styles.metric}>
+                        <div className={styles.metricLabel}>Orçamento total</div>
+                        <div className={styles.metricValue}>{symbol} {fmt(budget)}</div>
+                        <div className={styles.metricSub}>R$ {toReal(budget)}</div>
+                    </div>
+                    <div className={styles.metric}>
+                        <div className={styles.metricLabel}>Gasto total</div>
+                        <div className={styles.metricValue}>{symbol} {fmt(totalSpent)}</div>
+                        <div className={styles.metricSub}>R$ {toReal(totalSpent)}</div>
+                    </div>
+                    <div className={styles.metric}>
+                        <div className={styles.metricLabel}>Saldo restante</div>
+                        <div className={styles.metricValue}>{symbol} {fmt(remaining)}</div>
+                        <div className={`${styles.metricSub} ${remaining < 0 ? styles.warn : ''}`}>{pctUsed.toFixed(1)}% utilizado</div>
+                    </div>
+                    <div className={styles.metric}>
+                        <div className={styles.metricLabel}>Média por dia</div>
+                        <div className={styles.metricValue}>{symbol} {fmt(avgPerDay)}</div>
+                        <div className={styles.metricSub}>R$ {toReal(avgPerDay)} / dia</div>
+                    </div>
+                </div>
+                <div className={styles.card}>
+                    <div className={styles.cardTitle}>RESUMO</div>
+                    <div className={styles.histRow}><span className={styles.histDesc}>Dias da viagem</span><span className={styles.histAmount}>{days.length}</span></div>
+                    <div className={styles.histRow}><span className={styles.histDesc}>Dias com gastos</span><span className={styles.histAmount}>{daysWith}</span></div>
+                    <div className={styles.histRow}><span className={styles.histDesc}>Dias acima do orçamento diário</span><span className={styles.histAmount}>{daysOver}</span></div>
+                    <div className={styles.histRow}>
+                        <span className={styles.histDesc}>Maior gasto{biggest ? ` — ${biggest.description}` : ''}</span>
+                        <span className={styles.histAmount}>{biggest ? `${symbol} ${fmt(biggest.amount)}` : '—'}</span>
+                    </div>
+                </div>
+            </>
+        )
+    }
+
+    return (
+        <div className={styles.shell}>
+            <aside className={styles.sidebar}>
+                <div className={styles.logo}>
+                    <div className={styles.logoIcon}>✈</div>
+                    <span className={styles.logoText}>TripFinance</span>
+                </div>
+
+                <span className={styles.navSection}>VIAGEM</span>
+                {navView('Visão geral', 'overview')}
+                <div className={styles.navItem} onClick={onAddExpense}>Novo gasto</div>
+                {navView('Histórico', 'history')}
+                {navView('Minhas viagens', 'trips')}
+                {/* Pontos turísticos: ainda não implementado (sem endpoint) */}
+                <div className={styles.navItemDisabled} title="Em breve">Pontos turísticos</div>
+
+                <span className={styles.navSection}>PLANEJAMENTO</span>
+                {navView('Itinerário', 'itinerary')}
+                {navView('Relatório', 'report')}
+
+                <div className={styles.tripPill}>
+                    <div className={styles.tripPillLabel}>Viagem atual</div>
+                    <div className={styles.tripPillName}>{trip ? trip.name : '—'}</div>
+                    {trip && <div className={styles.tripPillDates}>{trip.startDate} — {trip.endDate}</div>}
+                </div>
+            </aside>
+
+            <main className={styles.main}>
+                <div className={styles.header}>
+                    <div>
+                        <h1 className={styles.pageTitle}>{VIEW_TITLES[view]}</h1>
+                        <p className={styles.pageSubtitle}>{subtitle()}</p>
+                    </div>
+                    <div className={styles.headerRight}>
+                        {trip && <span className={styles.badge}>Em andamento</span>}
+                        {trip && <button className={styles.logoutButton} onClick={onAddExpense}>+ Novo gasto</button>}
+                        <button className={styles.logoutButton} onClick={onCreateTrip}>+ Nova viagem</button>
+                        {/* Sai da conta e volta para a tela inicial */}
+                        <button className={styles.logoutButton} onClick={onLogout}>Sair</button>
+                    </div>
+                </div>
+
+                {view === 'overview' && renderOverview()}
+                {view === 'trips' && renderTrips()}
+                {view === 'history' && renderHistory()}
+                {view === 'itinerary' && renderItinerary()}
+                {view === 'report' && renderReport()}
             </main>
         </div>
     )
