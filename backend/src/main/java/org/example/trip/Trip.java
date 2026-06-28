@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.example.model.BaseEntity;
 import org.example.daily.DailyBudget;
 import org.example.expenses.TuristicPoint;
-import org.example.users.User;
 import org.example.util.IdGenerator;
 
 import java.time.LocalDate;
@@ -24,7 +23,9 @@ public class Trip extends BaseEntity {
     private List<TuristicPoint> listTuristic = new ArrayList<>();
     private LocalDate startDate;
     private LocalDate endDate;
-    private User createdBy;
+    // Guarda apenas o id do usuario dono da viagem (em vez do objeto User completo).
+    // Evita o vazamento de senha na serializacao e permite filtrar viagens por dono.
+    private String createdById;
     private double rest;
 
     public Trip(){
@@ -38,7 +39,7 @@ public class Trip extends BaseEntity {
                 String currency,
                 double currencyValue,
                 LocalDate startDate, LocalDate endDate,
-                User createdBy) {
+                String createdById) {
         this.id = IdGenerator.forTrip();
         this.name = name;
         this.description = description;
@@ -49,7 +50,7 @@ public class Trip extends BaseEntity {
         this.status = true;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.createdBy = createdBy;
+        this.createdById = createdById;
         this.createdAt = "hoje";
         this.updatedAt = "hoje";
         createDays();
@@ -155,12 +156,12 @@ public class Trip extends BaseEntity {
     }
 
 
-    public User getCreatedBy() {
-        return createdBy;
+    public String getCreatedById() {
+        return createdById;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedById(String createdById) {
+        this.createdById = createdById;
     }
 
     public List<TuristicPoint> getListTuristic() {

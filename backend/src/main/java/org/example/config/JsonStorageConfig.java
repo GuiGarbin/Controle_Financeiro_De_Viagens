@@ -1,10 +1,10 @@
 package org.example.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude; // para ignorar campos null no JSON
+import com.fasterxml.jackson.databind.DeserializationFeature; // para tolerar campos desconhecidos no JSON
 import com.fasterxml.jackson.databind.ObjectMapper; // classe principal do Jackson para conversão Java <-> JSON
 import com.fasterxml.jackson.databind.SerializationFeature; // para configurar o formato do JSON (ex: indentado)
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.example.model.*; //
 import org.example.repository.*; // importa as classes de repositório (UserRepository, TripRepository, etc.)
@@ -39,11 +39,16 @@ public class JsonStorageConfig {
         DateTimeFormatter molde = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         JavaTimeModule newTime = new JavaTimeModule();
         newTime.addSerializer(LocalDate.class, new LocalDateSerializer(molde));
-        newTime.addDeserializer(LocalDate.class, new LocalDateDeserializer(molde));
+        // Desserializador tolerante: aceita dd/MM/yyyy (formato oficial) e tambem
+        // datas antigas em ISO (java.util.Date), regravando no formato oficial.
+        newTime.addDeserializer(LocalDate.class, new LenientLocalDateDeserializer(molde));
         mapper.registerModule(newTime);
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        // Tolera campos antigos/desconhecidos no JSON (ex.: o antigo objeto
+        // `createdBy` nas viagens ja gravadas, agora substituido por `createdById`).
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return mapper;
     }
 

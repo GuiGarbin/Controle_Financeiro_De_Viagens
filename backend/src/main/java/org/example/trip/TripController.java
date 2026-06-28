@@ -70,7 +70,7 @@ public class TripController {
                 valueCurrency,
                 startDate,
                 finalDate,
-                user
+                user.getId()
         );
 
         tripList = tripRepository.findAll();
