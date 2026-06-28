@@ -19,17 +19,16 @@ public class AuthController {
     // Returna:  { "success": true } ou { "success": false, "message": "..." }
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        boolean valid = authService.checkCredentials(request.email(), request.password());
-
-        if (valid) {
-            return ResponseEntity.ok(new LoginResponse(true, "Login efetuado com sucesso!"));
-        } else {
-            // 401 = Login incorreto == não autorizado
-            return ResponseEntity.status(401).body(new LoginResponse(false, "Credenciais inválidas!"));
-        }
+        // Em caso de sucesso, devolve o id do usuário para o frontend manter a
+        // sessão e enviá-lo (header X-User-Id) ao buscar/criar viagens.
+        return authService.authenticate(request.email(), request.password())
+                .map(user -> ResponseEntity.ok(
+                        new LoginResponse(true, "Login efetuado com sucesso!", user.getId())))
+                .orElseGet(() -> ResponseEntity.status(401) // 401 = não autorizado
+                        .body(new LoginResponse(false, "Credenciais inválidas!", null)));
     }
 
 
     record LoginRequest(String email, String password) {}
-    record LoginResponse(boolean success, String message) {}
+    record LoginResponse(boolean success, String message, String userId) {}
 }

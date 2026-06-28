@@ -16,8 +16,9 @@ function LoginPage({ onLoginSuccess, goToBoot }) {
         setLoading(true)
         setError('')
         try {
-            await login(email, password)
-            onLoginSuccess()
+            // Guarda o id do usuário logado para escopar as viagens por dono.
+            const data = await login(email, password)
+            onLoginSuccess(data.userId)
         } catch (err) {
             setError(err.message)
         } finally {

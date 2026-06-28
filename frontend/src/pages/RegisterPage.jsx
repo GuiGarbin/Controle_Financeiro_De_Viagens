@@ -18,9 +18,9 @@ function RegisterPage({ onRegisterSuccess, goToBoot }) {
         setLoading(true)
         setError('')
         try {
-            // Chama o backend para cadastrar o usuário (salvo em memória por enquanto).
-            await register(fullName, birthDate, email, password)
-            onRegisterSuccess()
+            // Cadastra o usuário e ja inicia a sessão dele com o id retornado.
+            const data = await register(fullName, birthDate, email, password)
+            onRegisterSuccess(data.userId)
         } catch (err) {
             setError(err.message)
         } finally {

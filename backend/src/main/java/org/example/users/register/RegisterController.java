@@ -28,7 +28,7 @@ public class RegisterController {
             birthDate = LocalDate.parse(request.birthDate());
         } catch (Exception e) {
             return ResponseEntity.status(400)
-                    .body(new RegisterResponse(false, "Data de nascimento inválida."));
+                    .body(new RegisterResponse(false, "Data de nascimento inválida.", null));
         }
 
         User created = userRegisterService.register(
@@ -37,12 +37,13 @@ public class RegisterController {
         // register() retorna null quando o email é inválido ou já está cadastrado.
         if (created == null) {
             return ResponseEntity.status(409)
-                    .body(new RegisterResponse(false, "Email inválido ou já cadastrado."));
+                    .body(new RegisterResponse(false, "Email inválido ou já cadastrado.", null));
         }
 
-        return ResponseEntity.ok(new RegisterResponse(true, "Conta criada com sucesso!"));
+        // Devolve o id do novo usuário para o frontend ja iniciar a sessão dele.
+        return ResponseEntity.ok(new RegisterResponse(true, "Conta criada com sucesso!", created.getId()));
     }
 
     record RegisterRequest(String fullName, String birthDate, String email, String password) {}
-    record RegisterResponse(boolean success, String message) {}
+    record RegisterResponse(boolean success, String message, String userId) {}
 }
