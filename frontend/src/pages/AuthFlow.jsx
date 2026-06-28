@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { login, register } from '../services/authService'
+import DatePicker from '../components/DatePicker'
 import styles from './AuthFlow.module.css'
 
 // Tela de autenticação com animação de "morph": o botão escolhido vira o card
@@ -87,8 +88,8 @@ function AuthFlow({ onAuthSuccess }) {
                             </div>
                             <div className={styles.field}>
                                 <label className={styles.label}>Data de nascimento</label>
-                                <input className={styles.input} type="date" value={birthDate}
-                                       onChange={e => setBirthDate(e.target.value)} />
+                                <DatePicker value={birthDate} onChange={setBirthDate}
+                                            placeholder="Clique aqui e selecione a data" />
                             </div>
                         </>
                     )}

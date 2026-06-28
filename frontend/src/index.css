@@ -18,3 +18,6 @@ select,
 textarea {
     font-family: inherit;
 }
+
+/* Fade-in usado pelo seletor de data (global p/ não ser escopado por CSS Modules) */
+@keyframes dpFade { from { opacity: 0; } to { opacity: 1; } }
