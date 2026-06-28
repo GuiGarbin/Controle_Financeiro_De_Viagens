@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getCurrentTrip, getTrips, activateTrip, deleteTrip, addTuristicPoint } from '../services/tripService'
+import { getCurrentTrip, getTrips, activateTrip, deleteTrip, addTuristicPoint, addExpense } from '../services/tripService'
 import styles from './DashBoardPage.module.css'
 
 // Simbolos das moedas mais comuns; cai no proprio codigo (ex.: "JPY") se nao mapeado.
@@ -13,6 +13,9 @@ const tripSpent = (trip) => (trip.dailyBudgetList || []).reduce((s, d) => s + da
 const fmt = (n) => Math.round(n || 0).toLocaleString('pt-BR')
 const fmt2 = (n) => (n || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 const dayLabel = (d) => (d || '').slice(0, 5)
+// Conversões entre "aaaa-mm-dd" (input date) e "dd/MM/yyyy" (backend).
+const toBrDate = (iso) => { if (!iso) return ''; const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}` }
+const toIsoDate = (br) => { if (!br) return ''; const [d, m, y] = br.split('/'); return `${y}-${m}-${d}` }
 
 // "dd/MM/yyyy" -> Date (meia-noite local).
 const parseBr = (s) => {
@@ -42,9 +45,10 @@ const VIEW_TITLES = {
     itinerary: 'Itinerário',
     report: 'Relatório',
     turistic: 'Pontos turísticos',
+    expense: 'Novo gasto',
 }
 
-function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
+function DashBoardPage({ userId, onCreateTrip, onLogout }) {
     const [view, setView] = useState('overview')
     const [trip, setTrip] = useState(null)   // viagem atual (status = true)
     const [trips, setTrips] = useState([])    // todas as viagens do usuário
@@ -53,6 +57,10 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
     const [busy, setBusy] = useState(false)   // ações de ativar/excluir/adicionar em andamento
     const [tpName, setTpName] = useState('')  // form de ponto turístico
     const [tpCost, setTpCost] = useState('')
+    const [exDesc, setExDesc] = useState('')  // form de novo gasto
+    const [exAmount, setExAmount] = useState('')
+    const [exDate, setExDate] = useState('')
+    const [exMsg, setExMsg] = useState('')    // aviso de orçamento após adicionar
 
     // Busca a viagem atual + a lista de viagens do usuário logado.
     async function reload() {
@@ -95,6 +103,18 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
         finally { setBusy(false) }
     }
 
+    async function submitExpense() {
+        if (!exDesc || !exAmount || !exDate) { setError('Preencha descrição, valor e data.'); return }
+        setBusy(true); setError(''); setExMsg('')
+        try {
+            const res = await addExpense(trip.id, { description: exDesc, amount: Number(exAmount), date: toBrDate(exDate) }, userId)
+            setExDesc(''); setExAmount('')
+            await reload()
+            if (res && res.warning) setExMsg(res.warning)
+        } catch (e) { setError(e.message) }
+        finally { setBusy(false) }
+    }
+
     if (loading) {
         return <div className={styles.stateScreen}><div className={styles.stateText}>Carregando...</div></div>
     }
@@ -129,6 +149,7 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
             return `${trip.name} · ${n} gasto(s)`
         }
         if (view === 'turistic') return `${trip.name} · ${points.length} ponto(s)`
+        if (view === 'expense') return `${trip.name} · ${trip.currency} (${symbol})`
         if (view === 'itinerary' || view === 'report') return `${trip.name} · ${trip.startDate} — ${trip.endDate}`
         return `${trip.destination} · ${trip.currency} (${symbol}) · ${days.length} dias`
     }
@@ -387,6 +408,35 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
         )
     }
 
+    function renderExpense() {
+        if (!trip) return noTripBlock()
+        return (
+            <div className={styles.card}>
+                <div className={styles.cardTitle}>NOVO GASTO</div>
+                {exMsg && <div className={styles.expenseMsg}>{exMsg}</div>}
+                <div className={styles.formField}>
+                    <label className={styles.formLabel}>Descrição</label>
+                    <input className={styles.formInput} type="text" placeholder="Ex.: Jantar"
+                           value={exDesc} onChange={e => setExDesc(e.target.value)} />
+                </div>
+                <div className={styles.formField}>
+                    <label className={styles.formLabel}>Valor ({symbol})</label>
+                    <input className={styles.formInput} type="number" min="0" step="0.01" placeholder="0,00"
+                           value={exAmount} onChange={e => setExAmount(e.target.value)} />
+                </div>
+                <div className={styles.formField}>
+                    <label className={styles.formLabel}>Data</label>
+                    <input className={styles.formInput} type="date" value={exDate}
+                           min={toIsoDate(trip.startDate)} max={toIsoDate(trip.endDate)}
+                           onChange={e => setExDate(e.target.value)} />
+                </div>
+                <button className={styles.primaryAction} disabled={busy} onClick={submitExpense}>
+                    Adicionar gasto
+                </button>
+            </div>
+        )
+    }
+
     return (
         <div className={styles.shell}>
             <aside className={styles.sidebar}>
@@ -397,7 +447,7 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
 
                 <span className={styles.navSection}>VIAGEM</span>
                 {navView('Visão geral', 'overview')}
-                <div className={styles.navItem} onClick={onAddExpense}>Novo gasto</div>
+                {navView('Novo gasto', 'expense')}
                 {navView('Histórico', 'history')}
                 {navView('Minhas viagens', 'trips')}
                 {navView('Pontos turísticos', 'turistic')}
@@ -421,7 +471,7 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
                     </div>
                     <div className={styles.headerRight}>
                         {trip && <span className={styles.badge}>{tripStatusLabel(trip)}</span>}
-                        {trip && <button className={styles.logoutButton} onClick={onAddExpense}>+ Novo gasto</button>}
+                        {trip && <button className={styles.logoutButton} onClick={() => setView('expense')}>+ Novo gasto</button>}
                         <button className={styles.logoutButton} onClick={onCreateTrip}>+ Nova viagem</button>
                         {/* Sai da conta e volta para a tela inicial */}
                         <button className={styles.logoutButton} onClick={onLogout}>Sair</button>
@@ -434,6 +484,7 @@ function DashBoardPage({ userId, onCreateTrip, onAddExpense, onLogout }) {
                 {view === 'itinerary' && renderItinerary()}
                 {view === 'report' && renderReport()}
                 {view === 'turistic' && renderTuristic()}
+                {view === 'expense' && renderExpense()}
             </main>
         </div>
     )

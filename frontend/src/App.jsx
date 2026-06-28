@@ -4,7 +4,6 @@ import { useState } from 'react'
 import AuthFlow from './pages/AuthFlow'
 import DashBoardPage from './pages/DashBoardPage'
 import CreateTripPage from './pages/CreateTripPage'
-import AddExpensePage from './pages/AddExpensePage'
 import TitleBar from './components/TitleBar'
 import appStyles from './App.module.css'
 
@@ -47,7 +46,6 @@ function App() {
                 userId={userId}
                 onLogout={handleLogout}
                 onCreateTrip={() => setCurrentPage('createTrip')}
-                onAddExpense={() => setCurrentPage('addExpense')}
             />
         )}
 
@@ -60,13 +58,6 @@ function App() {
             />
         )}
 
-        {currentPage === 'addExpense' && (
-            <AddExpensePage
-                userId={userId}
-                onAdded={() => setCurrentPage('dashboard')}
-                goToDashboard={() => setCurrentPage('dashboard')}
-            />
-        )}
         </div>
         {overlay && (
             <div className={`${appStyles.whiteout} ${overlay === 'out' ? appStyles.whiteoutOut : appStyles.whiteoutIn}`} />
