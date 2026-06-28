@@ -9,14 +9,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
-// Desserializador de LocalDate tolerante a formatos antigos.
-//
-// O formato oficial do app e dd/MM/yyyy, mas dados ja gravados antes da
-// padronizacao guardavam datas como java.util.Date (ISO, ex.:
-// "2026-06-09T23:43:50.761+00:00") ou ISO simples ("2026-06-09"). Sem isso, a
-// leitura desses arquivos quebrava (DateTimeParseException -> HTTP 500) e
-// derrubaria tambem usuarios ja instalados. Aqui tentamos os formatos em ordem
-// e regravamos em dd/MM/yyyy no proximo save.
+
 public class LenientLocalDateDeserializer extends JsonDeserializer<LocalDate> {
 
     private final DateTimeFormatter primary;

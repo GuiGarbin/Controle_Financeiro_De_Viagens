@@ -1,16 +1,8 @@
-/* Estilos globais da aplicacao.
-   Fonte padrao de toda a interface: Segoe UI, com fallback para a pilha do
-   sistema. Como font-family e herdada, defini-la no :root faz toda a UI usar
-   Segoe UI por padrao — nenhuma pagina precisa redeclarar a fonte. */
+
 :root {
     font-family: 'Segoe UI', system-ui, Roboto, sans-serif;
 }
 
-/* Controles de formulario nao herdam font-family do documento por padrao (o
-   navegador aplica uma fonte propria). Forcamos a heranca para que input,
-   button, select e textarea tambem usem Segoe UI. Isso corrige, de quebra, o
-   glitch do <input type=date> no Chromium do Electron, que renderizava o
-   digito "0" como "R" ao cair na fonte padrao do controle. */
 button,
 input,
 select,

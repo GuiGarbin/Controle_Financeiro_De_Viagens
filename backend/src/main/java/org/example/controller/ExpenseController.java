@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// ARQUIVADO (ver docs/APIintegration.md secao 6): esta camada REST "plana"
+// ARQUIVADO: esta camada REST "plana"
 // nao e mais consumida pelo frontend e mapeava /api/trips/{tripId}/expenses, o
 // que colidiria com o novo TripRestController (modelo do terminal e a fonte da
 // verdade). As anotacoes @RestController/@RequestMapping foram removidas para

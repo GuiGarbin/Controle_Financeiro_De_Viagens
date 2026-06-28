@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// Controller REST de viagens (Fases 1, 2 e 3 do docs/APIintegration.md).
+// Controller REST de viagens
 // Nome "TripRestController" para nao colidir com a classe de negocio do
 // terminal org.example.trip.TripController (que NAO e um controller HTTP).
 //

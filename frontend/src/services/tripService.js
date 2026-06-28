@@ -1,10 +1,4 @@
-// Chamadas ao backend de viagens/gastos (Fase 4 do docs/APIintegration.md).
-// Espelha o estilo de services/authService.js (fetch puro, sem Axios).
-//
-// O backend responde no formato ApiResponse<T> ({ success, message, data,
-// timestamp }); aqui devolvemos apenas o `data`. O usuario logado, quando
-// conhecido, vai no header X-User-Id (curto prazo, app desktop mono-usuario —
-// ver secao 3 do plano); sem ele, o backend opera sobre todas as viagens.
+
 const BASE_URL = 'http://localhost:8080/api'
 
 function buildHeaders(userId) {
@@ -13,7 +7,6 @@ function buildHeaders(userId) {
     return headers
 }
 
-// Desembrulha o ApiResponse: retorna data em caso de sucesso, lanca Error caso contrario.
 async function unwrap(response) {
     const body = await response.json().catch(() => null)
     if (!response.ok) {
