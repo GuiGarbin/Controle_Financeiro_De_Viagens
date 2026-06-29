@@ -19,6 +19,8 @@
     background: #fff; border: 0.5px solid #e7e5e4; border-radius: 12px;
     box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.4);
 }
+/* Abre para cima quando não há espaço abaixo (evita corte no rodapé da janela) */
+.popoverUp { top: auto; bottom: calc(100% + 6px); }
 .screen {
     height: 100%;
     display: flex; flex-direction: column;

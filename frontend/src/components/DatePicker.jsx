@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import styles from './DatePicker.module.css'
 
 const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
@@ -20,11 +20,21 @@ function DatePicker({ value, onChange, placeholder = 'Selecione a data', min, ma
     const [year, setYear] = useState(value ? Number(value.slice(0, 4)) : null)
     const [month, setMonth] = useState(value ? Number(value.slice(5, 7)) - 1 : null)
     const [winTop, setWinTop] = useState(0)     // janela de rolagem dos anos (0 = mais recente)
+    const [dropUp, setDropUp] = useState(false) // abre para cima se faltar espaço abaixo
+    const fieldRef = useRef(null)
 
     const totalYears = maxYear - minYear + 1
     const maxTop = Math.max(0, totalYears - 12)
 
-    function openPicker() { setStep('year'); setOpen(true) }
+    function openPicker() {
+        // Decide se o seletor abre para baixo (padrão) ou para cima, conforme o
+        // espaço disponível na janela — evita que ele fique cortado embaixo.
+        const r = fieldRef.current && fieldRef.current.getBoundingClientRect()
+        const POPOVER_H = 270
+        setDropUp(!!r && r.bottom + POPOVER_H > window.innerHeight)
+        setStep('year')
+        setOpen(true)
+    }
     function close() { setOpen(false) }
 
     // A troca de tela é animada por CSS (key={step} remonta e dispara o fade-in).
@@ -59,7 +69,7 @@ function DatePicker({ value, onChange, placeholder = 'Selecione a data', min, ma
 
     return (
         <div className={styles.wrap}>
-            <button type="button" className={`${styles.field} ${display ? '' : styles.placeholder}`}
+            <button ref={fieldRef} type="button" className={`${styles.field} ${display ? '' : styles.placeholder}`}
                     onClick={() => (open ? close() : openPicker())}>
                 {display || placeholder}
             </button>
@@ -67,7 +77,7 @@ function DatePicker({ value, onChange, placeholder = 'Selecione a data', min, ma
             {open && (
                 <>
                     <div className={styles.backdrop} onClick={close} />
-                    <div className={styles.popover}>
+                    <div className={`${styles.popover} ${dropUp ? styles.popoverUp : ''}`}>
                         <div key={step} className={styles.screen}>
                           <div className={styles.head}>
                               {step !== 'year' && (
