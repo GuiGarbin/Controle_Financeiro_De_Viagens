@@ -3,8 +3,8 @@ import { createTrip } from '../services/tripService'
 import DatePicker from '../components/DatePicker'
 import styles from './CreateTripPage.module.css'
 
-// Moedas mais comuns (codigos ISO 4217). O backend resolve o cambio para BRL.
-const CURRENCIES = ['BRL', 'USD', 'EUR', 'JPY', 'GBP', 'ARS', 'CLP', 'CAD', 'AUD', 'CHF']
+// Moedas suportadas pela API de câmbio (Frankfurter/BCE). O backend converte para BRL.
+const CURRENCIES = ['BRL', 'USD', 'EUR', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD', 'CNY', 'MXN']
 
 // O <input type=date> entrega "aaaa-mm-dd"; o backend espera "dd/MM/yyyy".
 const toBrDate = (iso) => {

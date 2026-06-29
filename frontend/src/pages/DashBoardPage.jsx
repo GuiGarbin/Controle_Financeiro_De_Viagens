@@ -5,8 +5,8 @@ import styles from './DashBoardPage.module.css'
 
 // Simbolos das moedas mais comuns; cai no proprio codigo (ex.: "JPY") se nao mapeado.
 const CURRENCY_SYMBOLS = {
-    BRL: 'R$', USD: 'US$', EUR: '€', JPY: '¥', GBP: '£',
-    CHF: 'CHF', CAD: 'C$', AUD: 'A$', ARS: '$', CLP: '$',
+    BRL: 'R$', USD: 'US$', EUR: '€', GBP: '£', JPY: '¥',
+    CHF: 'CHF', CAD: 'C$', AUD: 'A$', CNY: 'CN¥', MXN: 'MX$',
 }
 const symbolFor = (code) => CURRENCY_SYMBOLS[code] || code || ''
 const daySpent = (day) => (day.listExpenses || []).reduce((s, e) => s + (e.amount || 0), 0)

@@ -25,14 +25,13 @@ public class TripService {
 
     // Formato usado em todo o app (dd/MM/yyyy), igual ao configurado no ObjectMapper.
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final String LOCAL_CURRENCY = "BRL";
 
     private final TripRepository tripRepository;
-    private final CurrencyService currencyService;
+    private final ExchangeRateService exchangeRates;
 
-    public TripService(TripRepository tripRepository, CurrencyService currencyService) {
+    public TripService(TripRepository tripRepository, ExchangeRateService exchangeRates) {
         this.tripRepository = tripRepository;
-        this.currencyService = currencyService;
+        this.exchangeRates = exchangeRates;
     }
 
     // --- Viagens (Fase 1) ---
@@ -54,7 +53,7 @@ public class TripService {
             throw new ValidationException("A data de fim nao pode ser anterior a data de inicio.");
         }
 
-        double currencyValue = currencyService.getRate(request.getCurrency(), LOCAL_CURRENCY);
+        double currencyValue = exchangeRates.getRate(request.getCurrency());
 
         Trip trip = new Trip(
                 request.getName(),
@@ -137,7 +136,7 @@ public class TripService {
                     "A data " + request.getDate() + " esta fora do intervalo da viagem.");
         }
 
-        double rate = currencyService.getRate(trip.getCurrency(), LOCAL_CURRENCY);
+        double rate = exchangeRates.getRate(trip.getCurrency());
         Expenses expense = new Expenses(
                 trip.getId(),
                 request.getDescription(),
