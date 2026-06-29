@@ -7,6 +7,7 @@
     background: linear-gradient(135deg, #1c1917 0%, #292524 60%, #44403c 100%);
     padding: 24px;
     box-sizing: border-box;
+    overflow: hidden; /* recorta o card ao expandir, sem gerar barra de rolagem */
 }
 
 /* ---- Hero ---- */
@@ -97,8 +98,14 @@
     pointer-events: auto;
     transition: opacity 0.3s ease 0.25s, transform 0.3s ease 0.25s; /* aparece após o morph */
 }
-/* Saída: limpa os campos (e o herói já está escondido) antes da transição branca. */
+/* Saída: limpa os campos e o card cresce até cobrir a tela de branco. */
 .stageExiting .form { opacity: 0; transition: opacity 0.22s ease; }
+.stageExiting .card {
+    transform: scale(5);
+    border-radius: 0;
+    box-shadow: none;
+    transition: transform 0.42s ease, border-radius 0.42s ease;
+}
 
 .backButton {
     background: none; border: none; font-size: 13px; color: #78716c;

@@ -41,8 +41,8 @@ function AuthFlow({ onAuthSuccess }) {
             const data = mode === 'login'
                 ? await login(email, password)
                 : await register(fullName, birthDate, email, password)
-            setExiting(true) // some com os campos; o App assume com o white-out
-            setTimeout(() => onAuthSuccess(data.userId), 240)
+            setExiting(true) // limpa os campos e expande o card; depois o App revela o dashboard
+            setTimeout(() => onAuthSuccess(data.userId), 420)
         } catch (err) {
             setError(err.message)
         } finally {

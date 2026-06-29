@@ -18,11 +18,13 @@ function App() {
   const [overlay, setOverlay] = useState(null) // 'in' | 'out' | null
 
   function handleAuthSuccess(id) {
+    // O card de auth expande (animação no AuthFlow) e, quando ele já cobre a tela
+    // de branco, trocamos para o dashboard com uma sobreposição branca opaca que
+    // some com fade — revelando o dashboard suavemente.
     setUserId(id)
-    setOverlay('in') // o branco cobre a tela
-    // troca para o dashboard por trás do branco e depois revela com fade
-    setTimeout(() => { setCurrentPage('dashboard'); setOverlay('out') }, 360)
-    setTimeout(() => setOverlay(null), 760)
+    setCurrentPage('dashboard')
+    setOverlay('out')
+    setTimeout(() => setOverlay(null), 400)
   }
 
   function handleLogout() {
