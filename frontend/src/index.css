@@ -29,6 +29,17 @@ input[type='number'] {
     -moz-appearance: textfield;
 }
 
+/* Barra de rolagem slim e discreta, no estilo do app */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: #d6d3ce;
+    border-radius: 99px;
+    border: 3px solid transparent;   /* afina o polegar com "padding" transparente */
+    background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: #b8b4ae; background-clip: padding-box; }
+
 @keyframes dpFade { from { opacity: 0; } to { opacity: 1; } }
 
 /* Transição branca auth -> dashboard (global p/ não ser escopado por CSS Modules) */
