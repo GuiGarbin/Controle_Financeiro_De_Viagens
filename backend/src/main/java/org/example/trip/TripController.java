@@ -35,7 +35,12 @@ public class TripController {
 
 
     public void addExpensiveToTrip(Trip trip, String description, double amount){
-        double currentCurrency = cambioApi.getRate(trip.getCurrency(), "BRL");
+        double currentCurrency;
+        try {
+          currentCurrency = cambioApi.getRate(trip.getCurrency(), "BRL");
+        } catch (RuntimeException e) {
+            currentCurrency = trip.getCurrencyValue();
+        }
         Expenses expenses = new Expenses(trip.getId(), description, amount, currentCurrency, trip.getCurrency(), "");
         LocalDate today = LocalDate.now();
         for(DailyBudget d : trip.getDailyBudgetList()){
@@ -70,7 +75,7 @@ public class TripController {
                 valueCurrency,
                 startDate,
                 finalDate,
-                user
+                user.getId()
         );
 
         tripList = tripRepository.findAll();

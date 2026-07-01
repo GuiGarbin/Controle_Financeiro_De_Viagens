@@ -5,7 +5,7 @@
    "scripts": {
     "dev:vite":     "vite",
      "dev:electron": "wait-on tcp:5173 && electron electron/main.cjs",
-    "dev":          "concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
+    "dev":          "concurrently -k \"npm run dev:vite\" \"npm run dev:electron\"",
     "build:react":  "vite build",
     "copy:jar":     "copy ..\\backend\\target\\backend-1.0-SNAPSHOT.jar .\\resources\\backend\\app.jar",
      "build:exe":    "npm run copy:jar && npm run build:react && electron-builder --win"

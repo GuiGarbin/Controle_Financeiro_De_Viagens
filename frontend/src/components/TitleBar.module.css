@@ -1,0 +1,36 @@
+/* Barra de título fina e arrastável (drag region). */
+.titlebar {
+    height: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* botões à direita */
+    padding: 0 12px;
+    background: #1c1917;
+    -webkit-app-region: drag;
+    user-select: none;
+}
+
+/* Os botões não fazem parte da área de arraste. */
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    -webkit-app-region: no-drag;
+}
+
+.dot {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background: #5a5650; /* cinza apagado por padrão */
+    transition: background 0.15s ease;
+}
+
+/* Acende nas cores quando o mouse se aproxima do grupo de botões. */
+.controls:hover .close { background: #ff5f57; }
+.controls:hover .min   { background: #febc2e; }
+.controls:hover .full  { background: #28c840; }

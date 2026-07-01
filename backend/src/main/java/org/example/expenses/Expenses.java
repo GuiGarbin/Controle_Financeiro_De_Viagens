@@ -3,7 +3,7 @@ package org.example.expenses;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.example.util.IdGenerator;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Expenses {
     private String id;
@@ -12,9 +12,11 @@ public class Expenses {
     private double amount;
     private double currencyValue;
     private String currency;
-    private Date date;
+    // Datas padronizadas em LocalDate (formato dd/MM/yyyy no JSON), em linha com o
+    // restante do modelo. Antes era java.util.Date, o que gerava serializacao inconsistente.
+    private LocalDate date;
     private String notes;
-    private Date createdAt;
+    private LocalDate createdAt;
 
     public Expenses(){
 
@@ -32,9 +34,9 @@ public class Expenses {
         this.amount = amount;
         this.currencyValue = currencyValue;
         this.currency = currency;
-        this.date = new Date();
+        this.date = LocalDate.now();
         this.notes = notes;
-        this.createdAt = new Date();
+        this.createdAt = LocalDate.now();
     }
 
     @JsonIgnore
@@ -82,11 +84,11 @@ public class Expenses {
         this.currency = currency;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -98,11 +100,11 @@ public class Expenses {
         this.notes = notes;
     }
 
-    public Date getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 

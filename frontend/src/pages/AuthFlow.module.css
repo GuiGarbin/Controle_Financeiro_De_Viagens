@@ -1,0 +1,135 @@
+.stage {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1c1917 0%, #292524 60%, #44403c 100%);
+    padding: 24px;
+    box-sizing: border-box;
+    overflow: hidden; /* recorta o card ao expandir, sem gerar barra de rolagem */
+}
+
+/* ---- Hero ---- */
+.hero {
+    text-align: center;
+    max-width: 420px;
+    max-height: 280px;
+    margin-bottom: 32px;
+    overflow: hidden;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.35s ease, max-height 0.45s ease, margin 0.45s ease;
+}
+.stageOpen .hero {
+    opacity: 0;
+    transform: translateY(-12px);
+    max-height: 0;
+    margin-bottom: 0;
+    pointer-events: none;
+}
+.badge {
+    display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+    color: #a8a29e; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 99px; padding: 6px 14px; margin-bottom: 32px;
+}
+.title { font-size: 2.6rem; font-weight: 700; line-height: 1.2; color: #fafaf9; margin-bottom: 16px; }
+.subtitle { font-size: 15px; color: #a8a29e; line-height: 1.6; }
+
+/* ---- Card (morph) ---- */
+.card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background: transparent;
+    padding: 0;
+    transition: background 0.4s ease, border-radius 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease;
+}
+.stageOpen .card {
+    background: #fafaf9;
+    border-radius: 16px;
+    padding: 36px 32px;
+    box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.55);
+}
+
+/* ---- Botões do boot ---- */
+.boot {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 1;
+    transition: opacity 0.25s ease;
+}
+.stageOpen .boot {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+}
+.primaryButton {
+    width: 100%; height: 48px; font-size: 15px; font-weight: 600;
+    color: #1c1917; background: #fafaf9; border: none; border-radius: 10px;
+    cursor: pointer; transition: opacity 0.15s ease;
+}
+.primaryButton:hover { opacity: 0.88; }
+.secondaryButton {
+    width: 100%; height: 48px; font-size: 15px; font-weight: 500;
+    color: #a8a29e; background: transparent; border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px; cursor: pointer; transition: all 0.15s ease;
+}
+.secondaryButton:hover { border-color: rgba(255,255,255,0.25); color: #fafaf9; }
+
+/* ---- Formulário ---- */
+.form {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.stageOpen .form {
+    max-height: 700px;
+    overflow: visible;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    transition: opacity 0.3s ease 0.25s, transform 0.3s ease 0.25s; /* aparece após o morph */
+}
+/* Saída: limpa os campos e o card cresce até cobrir a tela de branco. */
+.stageExiting .form { opacity: 0; transition: opacity 0.22s ease; }
+.stageExiting .card {
+    transform: scale(5);
+    border-radius: 0;
+    box-shadow: none;
+    transition: transform 0.42s ease, border-radius 0.42s ease;
+}
+
+.backButton {
+    background: none; border: none; font-size: 13px; color: #78716c;
+    cursor: pointer; padding: 0; margin-bottom: 20px; display: block; transition: color 0.15s;
+}
+.backButton:hover { color: #1c1917; }
+.cardTitle { font-size: 22px; font-weight: 700; color: #1c1917; margin-bottom: 6px; }
+.cardSubtitle { font-size: 14px; color: #78716c; margin-bottom: 20px; }
+.errorBox {
+    font-size: 13px; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca;
+    border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.label { font-size: 13px; font-weight: 500; color: #1c1917; }
+.input {
+    height: 42px; padding: 0 12px; font-size: 14px; color: #1c1917; background: #f5f5f4;
+    border: 1px solid #e7e5e4; border-radius: 8px; outline: none; transition: border-color 0.15s;
+    width: 100%; box-sizing: border-box;
+}
+.input:focus { border-color: #a8a29e; background: #fff; }
+.submit {
+    width: 100%; height: 44px; margin-top: 10px; font-size: 15px; font-weight: 600;
+    color: #fafaf9; background: #1c1917; border: none; border-radius: 10px; cursor: pointer;
+    transition: opacity 0.15s;
+}
+.submit:hover:not(:disabled) { opacity: 0.85; }
+.submit:disabled { opacity: 0.5; cursor: not-allowed; }

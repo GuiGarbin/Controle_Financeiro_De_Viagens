@@ -9,8 +9,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api")
+// ARQUIVADO: esta camada REST "plana"
+// nao e mais consumida pelo frontend e mapeava /api/trips/{tripId}/expenses, o
+// que colidiria com o novo TripRestController (modelo do terminal e a fonte da
+// verdade). As anotacoes @RestController/@RequestMapping foram removidas para
+// desregistrar os endpoints e evitar "ambiguous mapping" na subida do Spring.
+// O codigo permanece aqui apenas como referencia, sem ser um bean.
+//@RestController
+//@RequestMapping("/api")
 public class ExpenseController {
 
     private final ExpenseService expenseService;

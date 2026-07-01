@@ -1,18 +1,22 @@
 package org.example;
 
-import org.example.config.JsonStorageConfig;
-import org.example.menu.Menu;
-import org.example.repository.TripRepository;
-import org.example.trip.TripController;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-//@SpringBootApplication
+@SpringBootApplication
+@EnableScheduling // habilita a atualização periódica do câmbio (ExchangeRateService)
 public class Main {
     public static void main (String[] args){
-        //SpringApplication.run(Main.class, args);
-//        TripController trip = new TripController();
-//        trip.TripController();
-        Menu menu = new Menu();
-        menu.mainScreen();
+        // Inicia a aplicação como servidor web Spring Boot (porta 8080),
+        // que é o que o frontend Electron espera para fazer as chamadas HTTP.
+        SpringApplication.run(Main.class, args);
+
+        // Modo console (menu via terminal) — desativado enquanto rodamos como servidor web.
+        // Para voltar ao menu de terminal, comente o SpringApplication.run acima e
+        // descomente as duas linhas abaixo:
+        // Menu menu = new Menu();
+        // menu.mainScreen();
     }
 }
 

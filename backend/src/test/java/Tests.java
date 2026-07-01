@@ -32,7 +32,7 @@ public class Tests {
                 cambioApi.getRate("JPY", "BRL"),
                 LocalDate.now().plusDays(5),
                 LocalDate.now().plusDays(15),
-                user
+                user.getId()
         );
     }
 
